@@ -5,8 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export interface TokenPayload {
   id: string;
-  email: string;
-  tipo: string;
+  type: string;
   iat: number;
   exp: number;
 }
@@ -19,21 +18,27 @@ export function ensureAuthenticated(
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    res.status(401).json({ error: "Token não fornecido" });
+     res.status(401).json({ error: "Token não fornecido" });
   }
 
-  //pegar o token sem o bearer
   const [, token] = authHeader.split(" ");
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload;
+    console.log("Token decodificado:", decoded);
+
+    if (!decoded.id || !decoded.type) {
+       res.status(401).json({ error: "Token inválido ou malformado" });
+    }
+
     req.user = {
       id: decoded.id,
-      email: decoded.email,
-      tipo: decoded.tipo,
+      type: decoded.type
     };
+
     next();
   } catch (error) {
-    res.status(401).json({ error: "Token inválido" });
+     res.status(401).json({ error: "Token inválido" });
   }
 }
+

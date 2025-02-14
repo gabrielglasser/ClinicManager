@@ -5,6 +5,7 @@ import { sign } from "jsonwebtoken";
 interface AuthRequest {
   email: string;
   password: string;
+  type: string;
 }
 
 class AuthUserService {
@@ -29,7 +30,9 @@ class AuthUserService {
     //gerar token com JWT
     const token = sign(
       {
+        id: user.id,
         name: user.nome,
+        type: user.tipo,
         email: user.email,
       },
       process.env.JWT_SECRET,
@@ -39,7 +42,7 @@ class AuthUserService {
       }
     );
 
-    return { id: user.id, name: user.nome, email: user.email, token: token };
+    return { id: user.id, name: user.nome, email: user.email, type: user.tipo, token: token };
   }
 }
 
