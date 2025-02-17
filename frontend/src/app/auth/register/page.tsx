@@ -1,0 +1,1 @@
+import styles from "./register.module.scss";
