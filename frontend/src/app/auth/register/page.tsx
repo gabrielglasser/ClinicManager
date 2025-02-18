@@ -15,7 +15,6 @@ export default function Register() {
     const type = formData.get("type") as string;
     const photo = formData.get("photo") as File | null;
 
-
     if (name === "" || email === "" || password === "" || type === "") {
       console.log("Preencha todos os campos");
       return;
@@ -38,12 +37,12 @@ export default function Register() {
         },
       });
 
-      redirect("/");
       
     } catch (error) {
       console.log(error);
     }
-    
+
+    redirect("/");
   }
 
   return (
@@ -73,15 +72,16 @@ export default function Register() {
               className={styles.input}
             />
 
-            <select name="type" className={styles.input}>
-              <option value="patient">Recepcionista</option>
-              <option value="doctor">Médico</option>
-            </select>
-            <label>
-              Selecione sua foto de perfil
-              <input type="file" name="photo" accept="image/*" />
-            </label>
-
+            <div className={styles.group}>
+              <select name="type" className={styles.input}>
+                <option value="patient">Recepcionista</option>
+                <option value="doctor">Médico</option>
+              </select>
+              <label className={styles.fileLabel}>
+                Selecione sua foto
+                <input type="file" name="photo" className={styles.fileInput} />
+              </label>
+            </div>
             <button className={styles.button}>Acessar</button>
           </form>
           <Link href="/auth/login" className={styles.text}>

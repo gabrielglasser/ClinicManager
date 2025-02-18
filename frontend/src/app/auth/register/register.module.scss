@@ -1,0 +1,102 @@
+body{
+    background: radial-gradient(circle, var(--background-dark) 30%, var(--background-gradient));
+}
+
+.container{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.register{
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    width: 600px;
+    height: 440px;
+    background: var(--background-light);
+    border-radius: 10px;
+
+    form{
+        color: var(--white);
+        padding-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        gap: 16px;
+      }
+
+      form button{
+        height: 40px;
+        font-size: 16px;
+        background-color: var(--button-color);
+        border: none;
+        color: var(--text-primary);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s;
+      }
+
+      form button:hover{
+        background-color: var(--button-hover);
+        transform: scale(1.05);
+        cursor: pointer;
+      }
+
+      .input{
+        height: 40px;
+        padding: 0 16px;
+        border-radius: 10px;
+        border: 1px solid var(--button-color);
+        background: var(--sidebar-bg);
+      }
+
+      h1{
+        font-size: 32px;
+        color: var(--text-primary);
+        text-align: center;
+        
+      }
+
+      .group{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        gap: 8px;
+      }
+
+      .fileLabel {
+        display: inline-block;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        text-align: center;
+      }
+      
+      .fileInput {
+        display: none; 
+      }
+
+}
+
+.text{
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+@media (max-width: 600px) {
+    .register{
+        width: 90%;
+    }
+}
+

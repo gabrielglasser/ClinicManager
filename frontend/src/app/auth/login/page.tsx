@@ -33,7 +33,6 @@ export default function Login() {
         path: "/",
         httpOnly: false,
         secure: process.env.NODE_ENV === "production",
-        
       });
     } catch (error) {
       console.log(error);
@@ -44,30 +43,31 @@ export default function Login() {
 
   return (
     <>
-      <div className={styles.container}>
-        <section className={styles.login}>
-          {/* <Image src={} alt="logo"/> */}
-          <h1>Faça login para continuar</h1>
-          <form action={handleLogin}>
-            <input
-              type="email"
-              placeholder="Digite seu e-mail"
-              name="email"
-              className={styles.input}
-            />
-            <input
-              type="password"
-              placeholder="Digite sua senha"
-              name="password"
-              className={styles.input}
-            />
-            <button className={styles.button}>Acessar</button>
-          </form>
-          <Link href="/auth/register" className={styles.text}>
-            Não possui uma conta? Cadastre-se
-          </Link>
-          
-        </section>
+      <div className={styles.background}>
+        <div className={styles.container}>
+          <section className={styles.login}>
+            {/* <Image src={} alt="logo"/> */}
+            <h1>Faça login para continuar</h1>
+            <form action={handleLogin}>
+              <input
+                type="email"
+                placeholder="Digite seu e-mail"
+                name="email"
+                className={styles.input}
+              />
+              <input
+                type="password"
+                placeholder="Digite sua senha"
+                name="password"
+                className={styles.input}
+              />
+              <button className={styles.button}>Acessar</button>
+            </form>
+            <Link href="/auth/register" className={styles.text}>
+              Não possui uma conta? Cadastre-se
+            </Link>
+          </section>
+        </div>
       </div>
     </>
   );
