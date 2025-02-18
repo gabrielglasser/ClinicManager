@@ -9,15 +9,15 @@ export default function Login() {
   async function handleLogin(formData: FormData) {
     "use server";
 
-    const email = formData.get("email");
-    const password = formData.get("password");
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
     if (email === "" || password === "") {
       return;
     }
 
     try {
-      const response = await api.post("http://localhost:4000/users/login", {
+      const response = await api.post("/users/login", {
         email,
         password,
       });
@@ -32,6 +32,8 @@ export default function Login() {
         maxAge: expressTime,
         path: "/",
         httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+        
       });
     } catch (error) {
       console.log(error);
@@ -61,9 +63,10 @@ export default function Login() {
             />
             <button className={styles.button}>Acessar</button>
           </form>
-          <Link href="/users" className={styles.text}>
+          <Link href="/auth/register" className={styles.text}>
             Não possui uma conta? Cadastre-se
           </Link>
+          
         </section>
       </div>
     </>
