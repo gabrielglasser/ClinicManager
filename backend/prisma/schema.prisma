@@ -12,6 +12,7 @@ model Usuario {
   nome        String
   email       String        @unique
   senha       String
+  photo       String 
   tipo        String // "admin", "medico", "recepcionista"
   Funcionario Funcionario[]
 }
@@ -22,6 +23,7 @@ model Paciente {
   idade      Int
   telefone   String
   endereco   String
+  photo      String
   prontuario Prontuario?
   consultas  Consulta[]
 }
@@ -74,3 +76,5 @@ model Funcionario {
   usuario   Usuario? @relation(fields: [usuarioId], references: [id])
   usuarioId String?
 }
+
+

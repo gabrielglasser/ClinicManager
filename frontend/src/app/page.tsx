@@ -1,10 +1,11 @@
 import styles from "./page.module.scss";
+import Login from "./auth/login/page";
 
 
 export default function Home() {
   return (
     <div>
-      <h1>Home</h1>
+      <Login />
     </div>
   );
 }

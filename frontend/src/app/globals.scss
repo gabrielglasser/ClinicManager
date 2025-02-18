@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: 0;
+  font-family: sans-serif;
+}
+
+:root {
+  --primary-color: #007bff; // Azul principal
+  --secondary-color: #28a745; // Verde destaque
+  --background-light: #f8f9fa; // Cinza claro (fundo)
+  --background-dark: #1a1a2e; // Fundo escuro (modo dark)
+  --text-primary: #333333; // Preto (texto principal)
+  --text-secondary: #6c757d; // Cinza escuro (texto secundário)
+  --white: #ffffff;
+  --card-bg: #ffffff; // Branco para cartões
+  --sidebar-bg: #f4f5fa; // Fundo do menu lateral
+  --appointment-bg: #141b2d; // Fundo da agenda
+  --button-color: #007bff;
+  --button-hover: #0056b3;
+
+  --background-gradient: #323556;
+}

@@ -3,13 +3,21 @@ import "express-async-errors";
 import cors from "cors";
 import path from "path";
 
+import fileUpload from "express-fileupload";
 import { router } from "./routes";
+
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use(fileUpload({
+  limits: { fileSize: 50 * 1024 * 1024 },
+}));
+
 app.use(router)
+
+app.use("/files", express.static(path.resolve(__dirname, "..", "tmp")));
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
@@ -28,5 +36,5 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 
 app.listen(4000, () => {
-    console.log("Server is running on port 4000");
+    console.log("Server is running");
 });
