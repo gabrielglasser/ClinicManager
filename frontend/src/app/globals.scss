@@ -22,3 +22,12 @@
 
   --background-gradient: #323556;
 }
+
+.dark-mode {
+  --background-light: var(--background-dark);
+  --text-primary: var(--white);
+  --text-secondary: #a0aec0;
+  --card-bg: #1f2937;
+  --sidebar-bg: #111827;
+  --appointment-bg: #1f2937;
+}

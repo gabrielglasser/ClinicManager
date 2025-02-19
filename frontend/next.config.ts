@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
+const path = require('path');
+
+module.exports = {
+  sassOptions: {
+    includePaths: [path.join(__dirname, 'styles')],
+  },
+};
+
+
 const nextConfig: NextConfig = {
-  /* config options here */
+ 
 };
 
 export default nextConfig;

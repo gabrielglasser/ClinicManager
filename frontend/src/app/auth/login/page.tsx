@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { LogIn } from "lucide-react";
 
 export default function Login() {
   async function handleLogin(formData: FormData) {
@@ -38,7 +39,7 @@ export default function Login() {
       console.log(error);
     }
 
-    redirect("/");
+    redirect("/dashboard");
   }
 
   return (
@@ -46,8 +47,11 @@ export default function Login() {
       <div className={styles.background}>
         <div className={styles.container}>
           <section className={styles.login}>
-            {/* <Image src={} alt="logo"/> */}
-            <h1>Faça login para continuar</h1>
+            <div className={styles.header}>
+              {/* <Image src={} alt="logo"/> */}
+              <h1>Bem-vindo de volta</h1>
+              <p>Entre com suas credenciais para acessar o sistema</p>
+            </div>
             <form action={handleLogin}>
               <input
                 type="email"
@@ -61,7 +65,10 @@ export default function Login() {
                 name="password"
                 className={styles.input}
               />
-              <button className={styles.button}>Acessar</button>
+              <button className={styles.button}>
+                <LogIn size={20} />
+                Entrar
+              </button>
             </form>
             <Link href="/auth/register" className={styles.text}>
               Não possui uma conta? Cadastre-se

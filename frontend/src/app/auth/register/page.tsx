@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { UserPlus } from "lucide-react";
 
 export default function Register() {
   async function handleRegister(formData: FormData) {
@@ -82,7 +83,9 @@ export default function Register() {
                 <input type="file" name="photo" className={styles.fileInput} />
               </label>
             </div>
-            <button className={styles.button}>Acessar</button>
+            <button className={styles.button}>
+              <UserPlus size={20} />
+              Cadastrar</button>
           </form>
           <Link href="/auth/login" className={styles.text}>
             Já possui uma conta? Entre
