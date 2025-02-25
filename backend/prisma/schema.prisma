@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TipoUsuario {
+  ADMIN
+  FUNCIONARIO
+  MEDICO
+}
+
+model Usuario {
+  id          String        @id @default(uuid())
+  nome        String
+  email       String        @unique @map("user_email")
+  senha       String
+  photo       String 
+  tipo        TipoUsuario
+  funcionario Funcionario? // Relação um-para-um
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([email])
+}
+
+model Funcionario {
+  id              String        @id @default(uuid())
+  nome            String
+  telefone        String
+  especialidade   Especialidade @relation(fields: [especialidadeId], references: [id])
+  especialidadeId String
+  usuario         Usuario?      @relation(fields: [usuarioId], references: [id])
+  usuarioId       String?       @unique // Relação um-para-um
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Paciente {
+  id             String      @id @default(uuid())
+  nome           String
+  cpf            String      @unique @map("patient_cpf")
+  dataNascimento DateTime
+  telefone       String
+  endereco       String
+  photo          String
+  prontuario     Prontuario?
+  consultas      Consulta[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([cpf])
+}
+
+model Medico {
+  id              String        @id @default(uuid())
+  nome            String
+  crm             String        @unique
+  especialidade   Especialidade @relation(fields: [especialidadeId], references: [id])
+  especialidadeId String
+  telefone        String
+  consultas       Consulta[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Especialidade {
+  id          String       @id @default(uuid())
+  nome        String       @unique
+  funcionarios Funcionario[]
+  medicos     Medico[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Consulta {
+  id         String   @id @default(uuid())
+  paciente   Paciente @relation(fields: [pacienteId], references: [id])
+  pacienteId String
+  medico     Medico   @relation(fields: [medicoId], references: [id])
+  medicoId   String
+  data       DateTime @default(now())
+  sala       Sala     @relation(fields: [salaId], references: [id])
+  salaId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Sala {
+  id        String     @id @default(uuid())
+  numero    Int        @unique
+  consultas Consulta[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Prontuario {
+  id         String   @id @default(uuid())
+  paciente   Paciente @relation(fields: [pacienteId], references: [id])
+  pacienteId String   @unique
+  historico  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
