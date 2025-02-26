@@ -10,12 +10,18 @@ import salaRoutes from "./routes/salaRoutes";
 import prontuarioRoutes from "./routes/prontuarioRoutes";
 import errorMiddleware from "./middlewares/errorMiddleware";
 import dotenv from "dotenv";
+import logger from './utils/logger';
 
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
+
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.url}`);
+  next();
+});
 
 // Rotas
 app.use("/api/auth", authRoutes); // Rotas de autenticação
