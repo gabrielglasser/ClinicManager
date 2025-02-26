@@ -1,6 +1,7 @@
 import express from 'express';
 import authRoutes from './routes/authRoutes';
 import usuarioRoutes from './routes/usuarioRoutes';
+import funcionarioRoutes from './routes/funcionarioRoutes';
 import errorMiddleware from './middlewares/errorMiddleware';
 import dotenv from 'dotenv';
 
@@ -13,6 +14,7 @@ app.use(express.json());
 // Rotas
 app.use('/api/auth', authRoutes); // Rotas de autenticação
 app.use('/api', usuarioRoutes); // Rotas de usuário
+app.use('/api', funcionarioRoutes); // Rotas de funcionário
 
 // Middleware de erro
 app.use(errorMiddleware);

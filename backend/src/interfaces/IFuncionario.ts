@@ -10,3 +10,17 @@ export interface IFuncionario {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface ICreateFuncionario {
+  nome: string;
+  telefone: string;
+  especialidadeId: string;
+  usuarioId?: string;
+}
+
+export interface IUpdateFuncionario {
+  nome?: string;
+  telefone?: string;
+  especialidadeId?: string;
+  usuarioId?: string;
+}
