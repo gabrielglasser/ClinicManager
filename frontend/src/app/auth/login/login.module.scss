@@ -1,0 +1,99 @@
+.loginContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    padding: 1.5rem;
+  }
+  
+  .loginCard {
+    width: 100%;
+    max-width: 450px;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    padding: 2.5rem;
+    
+    @media (max-width: 480px) {
+      padding: 2rem 1.5rem;
+    }
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #3a8eff 0%, #1f6ed4 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .subtitle {
+    color: #6b7280;
+    font-size: 1rem;
+  }
+  
+  .form {
+    margin-bottom: 1.5rem;
+  }
+  
+  .forgotPassword {
+    display: flex;
+    justify-content: flex-end;
+    margin: -0.5rem 0 1.5rem;
+    
+    a {
+      color: #3a8eff;
+      font-size: 0.875rem;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .buttonIcon {
+    margin-right: 0.5rem;
+  }
+  
+  .registerLink {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+    
+    a {
+      color: #3a8eff;
+      font-weight: 600;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .errorAlert {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    
+    svg {
+      margin-right: 0.5rem;
+      flex-shrink: 0;
+    }
+  }
