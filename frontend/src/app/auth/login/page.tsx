@@ -85,7 +85,7 @@ const Login: React.FC = () => {
       }
 
       // Salvar o token no localStorage
-      localStorage.setItem('token', data.token);
+      document.cookie = `token=${data.token}; path=/; max-age=3600;`;
 
       // Redirecionar para o dashboard após login bem-sucedido
       router.push('/dashboard');
