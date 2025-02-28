@@ -1,0 +1,205 @@
+.registerContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    padding: 1.5rem;
+  }
+  
+  .registerCard {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    padding: 2.5rem;
+    
+    @media (max-width: 640px) {
+      padding: 2rem 1.5rem;
+    }
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #3a8eff 0%, #1f6ed4 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .subtitle {
+    color: #6b7280;
+    font-size: 1rem;
+  }
+  
+  .form {
+    margin-bottom: 1.5rem;
+  }
+  
+  .formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .photoUpload {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    
+    @media (max-width: 480px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  
+  .photoPreview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-right: 1.5rem;
+    border: 2px solid #e5e7eb;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    svg {
+      color: #9ca3af;
+    }
+    
+    @media (max-width: 480px) {
+      margin: 0 auto 1rem;
+    }
+  }
+  
+  .photoUploadControls {
+    flex: 1;
+    
+    @media (max-width: 480px) {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  
+  .photoLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #374151;
+  }
+  
+  .uploadButton {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f3f4f6;
+    color: #4b5563;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    svg {
+      margin-right: 0.5rem;
+    }
+    
+    &:hover {
+      background-color: #e5e7eb;
+    }
+  }
+  
+  .fileInput {
+    display: none;
+  }
+  
+  .photoError {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #ef4444;
+  }
+  
+  .selectContainer {
+    margin-bottom: 1.25rem;
+  }
+  
+  .selectLabel {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #374151;
+  }
+  
+  .select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    background-color: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+    
+    &:focus {
+      outline: none;
+      border-color: #3a8eff;
+      box-shadow: 0 0 0 3px rgba(58, 142, 255, 0.15);
+    }
+  }
+  
+  .loginLink {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+    
+    a {
+      color: #3a8eff;
+      font-weight: 600;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .errorAlert {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    
+    svg {
+      margin-right: 0.5rem;
+      flex-shrink: 0;
+    }
+  }

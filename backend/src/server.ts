@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import authRoutes from "./routes/authRoutes";
 import usuarioRoutes from "./routes/usuarioRoutes";
 import funcionarioRoutes from "./routes/funcionarioRoutes";
@@ -17,6 +18,14 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN, // Permite apenas requisições do frontend
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  })
+);
 
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.url}`);
