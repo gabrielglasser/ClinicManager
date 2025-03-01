@@ -6,8 +6,8 @@ export const loginController = async (req: Request, res: Response) => {
 
   try {
     // Chamar o service de autenticação
-    const token = await login(email, senha);
-    res.json({ token }); // Retornar o token gerado
+    const {token, usuario} = await login(email, senha);
+    res.json({ token, usuario }); // Retornar o token gerado
   } catch (error) {
     res.status(400).json(error); // Retornar erro, se houver
   }
