@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
@@ -18,8 +19,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // Buscar dados do usuário do localStorage
   const usuario = JSON.parse(
@@ -34,13 +34,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       localStorage.removeItem("usuario");
 
       // Redirecionar para a página de login
-      navigate("/auth/login");
+      router.push("/auth/login");
     } catch (error) {
       console.error("Erro ao fazer logout:", error);
       // Caso ocorra um erro, ainda assim limpe o token e redirecione
       localStorage.removeItem("token");
       localStorage.removeItem("usuario");
-      navigate("/auth/login");
+      router.push("/auth/login");
     }
   };
 
@@ -58,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         <div className={styles.navSection}>
           <h3>Principal</h3>
           <Link
-            to="/dashboard"
+            href="/dashboard"
             className={`${styles.navLink} ${
               isActive("/dashboard") ? styles.active : ""
             }`}
@@ -69,7 +69,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </Link>
 
           <Link
-            to="/pacientes"
+            href="/pacientes"
             className={`${styles.navLink} ${
               isActive("/pacientes") ? styles.active : ""
             }`}
@@ -80,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </Link>
 
           <Link
-            to="/medicos"
+            href="/medicos"
             className={`${styles.navLink} ${
               isActive("/medicos") ? styles.active : ""
             }`}
@@ -91,7 +91,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </Link>
 
           <Link
-            to="/consultas"
+            href="/consultas"
             className={`${styles.navLink} ${
               isActive("/consultas") ? styles.active : ""
             }`}
@@ -102,7 +102,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </Link>
 
           <Link
-            to="/prontuarios"
+            href="/prontuarios"
             className={`${styles.navLink} ${
               isActive("/prontuarios") ? styles.active : ""
             }`}
@@ -116,7 +116,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         <div className={styles.navSection}>
           <h3>Sistema</h3>
           <Link
-            to="/usuarios"
+            href="/usuarios"
             className={`${styles.navLink} ${
               isActive("/usuarios") ? styles.active : ""
             }`}
@@ -127,7 +127,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </Link>
 
           <Link
-            to="/configuracoes"
+            href="/configuracoes"
             className={`${styles.navLink} ${
               isActive("/configuracoes") ? styles.active : ""
             }`}
