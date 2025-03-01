@@ -135,9 +135,9 @@ const Login: React.FC = () => {
             required
           />
 
-          <div className={styles.forgotPassword}>
+          {/* <div className={styles.forgotPassword}>
             <Link href="/recuperar-senha">Esqueceu sua senha?</Link>
-          </div>
+          </div> */}
 
           <Button
             type="submit"

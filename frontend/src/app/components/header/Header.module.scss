@@ -1,0 +1,123 @@
+.header {
+    height: 70px;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 280px;
+    z-index: 5;
+    transition: all 0.3s ease;
+    
+    @media (max-width: 768px) {
+      left: 0;
+    }
+  }
+  
+  .menuButton {
+    display: none;
+    background: none;
+    border: none;
+    color: #4b5563;
+    cursor: pointer;
+    margin-right: 1rem;
+    
+    @media (max-width: 768px) {
+      display: flex;
+    }
+    
+    &:hover {
+      color: #1f2937;
+    }
+  }
+  
+  .searchContainer {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+    margin-right: 1rem;
+    
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+    font-size: 0.875rem;
+    
+    &:focus {
+      outline: none;
+      border-color: #3a8eff;
+      box-shadow: 0 0 0 3px rgba(58, 142, 255, 0.15);
+    }
+  }
+  
+  .searchIcon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+  }
+  
+  .actions {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
+  
+  .actionButton {
+    background: none;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4b5563;
+    cursor: pointer;
+    position: relative;
+    margin-left: 0.5rem;
+    
+    &:hover {
+      background-color: #f3f4f6;
+      color: #1f2937;
+    }
+  }
+  
+  .badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #ef4444;
+    color: white;
+    font-size: 0.625rem;
+    font-weight: 600;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+  }
+  
+  .pageTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 1rem;
+    
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
