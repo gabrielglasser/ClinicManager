@@ -5,7 +5,9 @@ const prisma = new PrismaClient();
 
 // Criar um paciente
 export const criarPaciente = async (data: ICreatePaciente): Promise<Paciente> => {
+  console.log(data);
   return prisma.paciente.create({ data });
+  
 };
 
 // Buscar um paciente por ID

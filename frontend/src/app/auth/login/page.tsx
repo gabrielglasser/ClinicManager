@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link'; 
-import { useRouter } from 'next/navigation';
-import { Mail, Lock, LogIn } from 'lucide-react';
-import Input from '../../components/input/Input';
-import Button from '../../components/button/Button';
-import styles from './Login.module.scss';
+import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Mail, Lock, LogIn } from "lucide-react";
+import Input from "../../components/input/Input";
+import Button from "../../components/button/Button";
+import styles from "./Login.module.scss";
 
 interface FormData {
   email: string;
@@ -21,8 +21,8 @@ interface FormErrors {
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
-    email: '',
-    senha: '',
+    email: "",
+    senha: "",
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -43,15 +43,15 @@ const Login: React.FC = () => {
     const newErrors: FormErrors = {};
 
     if (!formData.email) {
-      newErrors.email = 'E-mail é obrigatório';
+      newErrors.email = "E-mail é obrigatório";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'E-mail inválido';
+      newErrors.email = "E-mail inválido";
     }
 
     if (!formData.senha) {
-      newErrors.senha = 'Senha é obrigatória';
+      newErrors.senha = "Senha é obrigatória";
     } else if (formData.senha.length < 6) {
-      newErrors.senha = 'A senha deve ter pelo menos 6 caracteres';
+      newErrors.senha = "A senha deve ter pelo menos 6 caracteres";
     }
 
     setErrors(newErrors);
@@ -67,10 +67,10 @@ const Login: React.FC = () => {
 
     try {
       // Chamada à API de login
-      const response = await fetch('http://localhost:4000/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:4000/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: formData.email,
@@ -81,16 +81,22 @@ const Login: React.FC = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Falha ao fazer login. Verifique suas credenciais.');
+        throw new Error(
+          data.message || "Falha ao fazer login. Verifique suas credenciais."
+        );
       }
 
-      // Salvar o token no localStorage
-      document.cookie = `token=${data.token}; path=/; max-age=3600;`;
+      // Armazenar o token e os dados do usuário no localStorage
+      localStorage.setItem("token", data.token); // Acessa o token corretamente
+      localStorage.setItem("usuario", JSON.stringify(data.usuario)); // Armazena os dados do usuário
 
       // Redirecionar para o dashboard após login bem-sucedido
-      router.push('/dashboard');
+      router.push("/dashboard");
     } catch (error) {
-      setErrors({ general: error.message || 'Falha ao fazer login. Verifique suas credenciais.' });
+      setErrors({
+        general:
+          error.message || "Falha ao fazer login. Verifique suas credenciais.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -105,9 +111,7 @@ const Login: React.FC = () => {
         </div>
 
         {errors.general && (
-          <div className={styles.errorAlert}>
-            {errors.general}
-          </div>
+          <div className={styles.errorAlert}>{errors.general}</div>
         )}
 
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -139,11 +143,7 @@ const Login: React.FC = () => {
             <Link href="/recuperar-senha">Esqueceu sua senha?</Link>
           </div> */}
 
-          <Button
-            type="submit"
-            fullWidth
-            isLoading={isLoading}
-          >
+          <Button type="submit" fullWidth isLoading={isLoading}>
             <LogIn size={20} className={styles.buttonIcon} />
             Entrar
           </Button>

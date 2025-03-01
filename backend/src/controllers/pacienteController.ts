@@ -1,23 +1,38 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 import {
   criarPaciente,
   buscarPacientePorId,
   listarPacientes,
   atualizarPaciente,
   deletarPaciente,
-} from '../services/pacienteService';
-import { ICreatePaciente, IUpdatePaciente } from '../interfaces/IPaciente';
-import { uploadMiddleware, handleUpload } from '../middlewares/uploadMiddleware';
+} from "../services/pacienteService";
+import {
+  uploadMiddleware,
+  handleUpload,
+} from "../middlewares/uploadMiddleware";
 
 export const criarPacienteController = [
-  uploadMiddleware, 
-  handleUpload, 
+  uploadMiddleware,
+  handleUpload,
   async (req: Request, res: Response) => {
     const { nome, cpf, dataNascimento, telefone, endereco } = req.body;
-    const photo = req.body.photo; 
+    const photo = req.body.photo;
+
+    // Converter dataNascimento para um objeto Date
+    const dataNascimentoDate = new Date(dataNascimento);
+    if (isNaN(dataNascimentoDate.getTime())) {
+      return res.status(400).json({ error: "Data de nascimento inválida." });
+    }
 
     try {
-      const paciente = await criarPaciente({ nome, cpf, dataNascimento, telefone, endereco, photo });
+      const paciente = await criarPaciente({
+        nome,
+        cpf,
+        dataNascimento: dataNascimentoDate,
+        telefone,
+        endereco,
+        photo,
+      });
       res.status(201).json(paciente);
     } catch (error) {
       res.status(400).json(error);
@@ -25,13 +40,15 @@ export const criarPacienteController = [
   },
 ];
 
-
-export const buscarPacientePorIdController = async (req: Request, res: Response) => {
+export const buscarPacientePorIdController = async (
+  req: Request,
+  res: Response
+) => {
   const { id } = req.params;
   try {
     const paciente = await buscarPacientePorId(id);
     if (!paciente) {
-      return res.status(404).json({ error: 'Paciente não encontrado.' });
+      return res.status(404).json({ error: "Paciente não encontrado." });
     }
     res.status(200).json(paciente);
   } catch (error) {
@@ -39,7 +56,10 @@ export const buscarPacientePorIdController = async (req: Request, res: Response)
   }
 };
 
-export const listarPacientesController = async (req: Request, res: Response) => {
+export const listarPacientesController = async (
+  req: Request,
+  res: Response
+) => {
   try {
     const pacientes = await listarPacientes();
     res.status(200).json(pacientes);
@@ -49,15 +69,22 @@ export const listarPacientesController = async (req: Request, res: Response) => 
 };
 
 export const atualizarPacienteController = [
-  uploadMiddleware, 
-  handleUpload, 
+  uploadMiddleware,
+  handleUpload,
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const { nome, cpf, dataNascimento, telefone, endereco } = req.body;
-    const photo = req.body.photo; 
+    const photo = req.body.photo;
 
     try {
-      const paciente = await atualizarPaciente(id, { nome, cpf, dataNascimento, telefone, endereco, photo });
+      const paciente = await atualizarPaciente(id, {
+        nome,
+        cpf,
+        dataNascimento,
+        telefone,
+        endereco,
+        photo,
+      });
       res.status(200).json(paciente);
     } catch (error) {
       res.status(400).json(error);
@@ -65,7 +92,10 @@ export const atualizarPacienteController = [
   },
 ];
 
-export const deletarPacienteController = async (req: Request, res: Response) => {
+export const deletarPacienteController = async (
+  req: Request,
+  res: Response
+) => {
   const { id } = req.params;
   try {
     await deletarPaciente(id);

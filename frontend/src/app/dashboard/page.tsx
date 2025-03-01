@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Users,
@@ -12,25 +12,92 @@ import {
 } from "lucide-react";
 import DashboardLayout from "./layout/DashboardLayout";
 import styles from "./Dashboard.module.scss";
-import { useState, useEffect } from "react";
 
 const Dashboard: React.FC = () => {
-  const [totalPacientes, setTotalPacientes] = useState();
+  const [totalPacientes, setTotalPacientes] = useState<number>(0);
+  const [totalMedicos, setTotalMedicos] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // Função para buscar pacientes
+  const fetchPacientes = async () => {
+    try {
+      const token = localStorage.getItem('token'); // Obter o token do localStorage
+      if (!token) {
+        throw new Error('Token não encontrado. Faça login novamente.');
+      }
+
+      const response = await fetch("http://localhost:4000/api/pacientes", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Incluir o token no cabeçalho
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar pacientes.");
+      }
+
+      const data = await response.json();
+      setTotalPacientes(data.length); // Define o total de pacientes
+    } catch (error) {
+      console.error("Erro ao buscar pacientes:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPacientes();
+  }, []);
+
+
+  // Função para buscar médicos
+  const fetchMedicos = async () => {
+    try {
+      const token = localStorage.getItem('token'); // Obter o token do localStorage
+      if (!token) {
+        throw new Error('Token não encontrado. Faça login novamente.');
+      }
+
+      const response = await fetch("http://localhost:4000/api/medicos", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Incluir o token no cabeçalho
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar médicos.");
+      }
+
+      const data = await response.json();
+      setTotalMedicos(data.length); // Define o total de médicos
+    } catch (error) {
+      console.error("Erro ao buscar médicos:", error);
+    } finally {
+      setIsLoading(false);
+    }
+        }
+
+  useEffect(() => {
+    fetchMedicos();
+  }, []);
   
-
 
   const stats = [
     {
       title: "Total de Pacientes",
-      value: 1248,
+      value: isLoading ? "Carregando..." : error ? "Erro" : totalPacientes,
       change: 12.5,
       icon: <Users size={20} />,
       iconClass: styles.blue,
     },
     {
       title: "Médicos Ativos",
-      value: 36,
+      value: isLoading ? "Carregando..." : error ? "Erro" : totalMedicos,
       change: 2.8,
       icon: <UserCog size={20} />,
       iconClass: styles.purple,
@@ -97,18 +164,20 @@ const Dashboard: React.FC = () => {
                 </div>
               </div>
               <p className={styles.statValue}>{stat.value}</p>
-              <div
-                className={`${styles.statChange} ${
-                  stat.change >= 0 ? styles.positive : styles.negative
-                }`}
-              >
-                {stat.change >= 0 ? (
-                  <TrendingUp size={14} />
-                ) : (
-                  <TrendingDown size={14} />
-                )}
-                <span>{Math.abs(stat.change)}% em relação ao mês anterior</span>
-              </div>
+              {!isLoading && !error && (
+                <div
+                  className={`${styles.statChange} ${
+                    stat.change >= 0 ? styles.positive : styles.negative
+                  }`}
+                >
+                  {stat.change >= 0 ? (
+                    <TrendingUp size={14} />
+                  ) : (
+                    <TrendingDown size={14} />
+                  )}
+                  <span>{Math.abs(stat.change)}% em relação ao mês anterior</span>
+                </div>
+              )}
             </div>
           ))}
         </div>
