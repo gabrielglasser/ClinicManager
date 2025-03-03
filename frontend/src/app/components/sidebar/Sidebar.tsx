@@ -44,6 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     }
   };
 
+
   const isActive = (path: string) => {
     return location.pathname === path;
   };
@@ -69,9 +70,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </Link>
 
           <Link
-            href="/pacientes"
+            href="/dashboard/patients"
             className={`${styles.navLink} ${
-              isActive("/pacientes") ? styles.active : ""
+              isActive("/dashboard/patients") ? styles.active : ""
             }`}
             onClick={onClose}
           >
