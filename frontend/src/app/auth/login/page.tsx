@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Mail, Lock, LogIn } from "lucide-react";
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
@@ -19,7 +19,7 @@ interface FormErrors {
   general?: string;
 }
 
-const Login: React.FC = () => {
+export default function Login() {
   const [formData, setFormData] = useState<FormData>({
     email: "",
     senha: "",
@@ -66,7 +66,6 @@ const Login: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Chamada à API de login
       const response = await fetch("http://localhost:4000/api/auth/login", {
         method: "POST",
         headers: {
@@ -86,16 +85,15 @@ const Login: React.FC = () => {
         );
       }
 
-      // Armazenar o token e os dados do usuário no localStorage
-      localStorage.setItem("token", data.token); // Acessa o token corretamente
-      localStorage.setItem("usuario", JSON.stringify(data.usuario)); // Armazena os dados do usuário
+      // Armazenar o token como cookie ao invés de localStorage
+      document.cookie = `token=${data.token}; path=/`;
+      localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-      // Redirecionar para o dashboard após login bem-sucedido
+      // Usar o router do Next.js para redirecionar
       router.push("/dashboard");
     } catch (error) {
       setErrors({
-        general:
-          error.message || "Falha ao fazer login. Verifique suas credenciais.",
+        general: "Falha ao fazer login. Verifique suas credenciais.",
       });
     } finally {
       setIsLoading(false);
@@ -155,6 +153,4 @@ const Login: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}
