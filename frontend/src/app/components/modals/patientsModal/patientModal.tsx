@@ -129,13 +129,25 @@ const PatientModal: React.FC<PatientModalProps> = ({
   };
 
   const formatCPF = (value: string) => {
+    // Remove todos os caracteres não numéricos
     const numbers = value.replace(/\D/g, "");
-    return numbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+    // Limita a 11 dígitos
+    const cpf = numbers.slice(0, 11);
+    // Aplica a máscara
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
   };
 
   const formatPhone = (value: string) => {
+    // Remove todos os caracteres não numéricos
     const numbers = value.replace(/\D/g, "");
-    return numbers.replace(/(\d{2})(\d{5})(\d{4})/g, "($1) $2-$3");
+    // Limita a 11 dígitos
+    const phone = numbers.slice(0, 11);
+
+    // Verifica se é celular (11 dígitos) ou telefone fixo (10 dígitos)
+    if (phone.length <= 10) {
+      return phone.replace(/(\d{2})(\d{4})(\d{4})/g, "($1) $2-$3");
+    }
+    return phone.replace(/(\d{2})(\d{5})(\d{4})/g, "($1) $2-$3");
   };
 
   const handleChange = (
@@ -144,7 +156,6 @@ const PatientModal: React.FC<PatientModalProps> = ({
     const { name, value } = e.target;
     let formattedValue = value;
 
-    // Aplicar formatação específica para cada campo
     if (name === "cpf") {
       formattedValue = formatCPF(value);
     } else if (name === "telefone") {
@@ -166,14 +177,16 @@ const PatientModal: React.FC<PatientModalProps> = ({
       newErrors.nome = "Nome é obrigatório";
     }
 
-    // Validar CPF apenas se estiver criando ou se o campo foi modificado
+    // Validação mais rigorosa do CPF
     if (!isEditing && !formData.cpf) {
       newErrors.cpf = "CPF é obrigatório";
-    } else if (
-      formData.cpf &&
-      !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(formData.cpf)
-    ) {
-      newErrors.cpf = "CPF inválido";
+    } else if (formData.cpf) {
+      const cpfNumbers = formData.cpf.replace(/\D/g, "");
+      if (cpfNumbers.length !== 11) {
+        newErrors.cpf = "CPF deve conter 11 dígitos";
+      } else if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(formData.cpf)) {
+        newErrors.cpf = "Formato de CPF inválido";
+      }
     }
 
     // Validar data de nascimento apenas se estiver criando ou se o campo foi modificado
@@ -187,14 +200,16 @@ const PatientModal: React.FC<PatientModalProps> = ({
       }
     }
 
-    // Validar telefone apenas se estiver criando ou se o campo foi modificado
+    // Validação mais rigorosa do telefone
     if (!isEditing && !formData.telefone) {
       newErrors.telefone = "Telefone é obrigatório";
-    } else if (
-      formData.telefone &&
-      !/^\(\d{2}\)\s\d{5}-\d{4}$/.test(formData.telefone)
-    ) {
-      newErrors.telefone = "Telefone inválido";
+    } else if (formData.telefone) {
+      const phoneNumbers = formData.telefone.replace(/\D/g, "");
+      if (phoneNumbers.length < 10 || phoneNumbers.length > 11) {
+        newErrors.telefone = "Telefone deve conter 10 ou 11 dígitos";
+      } else if (!/^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(formData.telefone)) {
+        newErrors.telefone = "Formato de telefone inválido";
+      }
     }
 
     // Validar endereço apenas se estiver criando ou se o campo foi modificado
