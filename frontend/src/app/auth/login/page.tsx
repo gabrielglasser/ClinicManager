@@ -71,29 +71,23 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: formData.email,
-          senha: formData.senha,
-        }),
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message || "Falha ao fazer login. Verifique suas credenciais."
-        );
+        throw new Error(data.message || "Erro ao fazer login");
       }
 
-      // Armazenar o token como cookie ao invés de localStorage
+      // Salvar token no localStorage e cookie
+      localStorage.setItem("token", data.token);
       document.cookie = `token=${data.token}; path=/`;
-      localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-      // Usar o router do Next.js para redirecionar
       router.push("/dashboard");
     } catch (error) {
       setErrors({
-        general: "Falha ao fazer login. Verifique suas credenciais.",
+        general: error instanceof Error ? error.message : "Erro ao fazer login",
       });
     } finally {
       setIsLoading(false);

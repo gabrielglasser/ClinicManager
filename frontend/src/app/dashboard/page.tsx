@@ -12,39 +12,52 @@ import {
 } from "lucide-react";
 import DashboardLayout from "./layout/DashboardLayout";
 import styles from "./Dashboard.module.scss";
+import { useRouter } from "next/navigation";
 
 const Dashboard: React.FC = () => {
+  const router = useRouter();
   const [totalPacientes, setTotalPacientes] = useState<number>(0);
   const [totalMedicos, setTotalMedicos] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Função para verificar autenticação
+  const checkAuth = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/auth/login");
+      return false;
+    }
+    return token;
+  };
+
   // Função para buscar pacientes
   const fetchPacientes = async () => {
-    try {
-      const token = localStorage.getItem('token'); // Obter o token do localStorage
-      if (!token) {
-        throw new Error('Token não encontrado. Faça login novamente.');
-      }
+    const token = checkAuth();
+    if (!token) return;
 
+    try {
       const response = await fetch("http://localhost:4000/api/pacientes", {
-        method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Incluir o token no cabeçalho
+          Authorization: `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error("Erro ao buscar pacientes.");
+        if (response.status === 401) {
+          localStorage.removeItem("token");
+          router.push("/auth/login");
+          return;
+        }
+        throw new Error("Erro ao buscar pacientes");
       }
 
       const data = await response.json();
-      setTotalPacientes(data.length); // Define o total de pacientes
+      setTotalPacientes(data.length);
     } catch (error) {
       console.error("Erro ao buscar pacientes:", error);
-    } finally {
-      setIsLoading(false);
+      setError("Erro ao carregar dados");
     }
   };
 
@@ -52,13 +65,12 @@ const Dashboard: React.FC = () => {
     fetchPacientes();
   }, []);
 
-
   // Função para buscar médicos
   const fetchMedicos = async () => {
     try {
-      const token = localStorage.getItem('token'); // Obter o token do localStorage
+      const token = localStorage.getItem("token"); // Obter o token do localStorage
       if (!token) {
-        throw new Error('Token não encontrado. Faça login novamente.');
+        throw new Error("Token não encontrado. Faça login novamente.");
       }
 
       const response = await fetch("http://localhost:4000/api/medicos", {
@@ -80,12 +92,11 @@ const Dashboard: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-        }
+  };
 
   useEffect(() => {
     fetchMedicos();
   }, []);
-  
 
   const stats = [
     {
@@ -175,7 +186,9 @@ const Dashboard: React.FC = () => {
                   ) : (
                     <TrendingDown size={14} />
                   )}
-                  <span>{Math.abs(stat.change)}% em relação ao mês anterior</span>
+                  <span>
+                    {Math.abs(stat.change)}% em relação ao mês anterior
+                  </span>
                 </div>
               )}
             </div>

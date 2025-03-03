@@ -63,10 +63,14 @@ const PatientModal: React.FC<PatientModalProps> = ({
 
   useEffect(() => {
     if (patient) {
+      // Ajusta a data para considerar o fuso horário local
+      const adjustedDate = new Date(patient.dataNascimento);
+      const formattedDate = adjustedDate.toISOString().split("T")[0];
+
       setFormData({
         nome: patient.nome,
         cpf: patient.cpf,
-        dataNascimento: patient.dataNascimento,
+        dataNascimento: formattedDate,
         telefone: patient.telefone,
         endereco: patient.endereco,
         photo: patient.photo,

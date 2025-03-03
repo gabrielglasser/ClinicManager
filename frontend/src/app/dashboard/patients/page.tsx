@@ -143,6 +143,7 @@ const Patients: React.FC = () => {
     setIsLoading(true);
 
     try {
+
       const response = await fetch("http://localhost:4000/api/pacientes", {
         headers: {
           Authorization: `Bearer ${token}`,

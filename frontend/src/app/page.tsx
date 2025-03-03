@@ -1,13 +1,18 @@
+"use client";
+
+import { useEffect } from "react";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 
-export default async function Home() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token");
+export default function Home() {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  if (!token) {
-    redirect("/auth/login");
-  } else {
-    redirect("/dashboard");
-  }
+    if (!token) {
+      redirect("/auth/login");
+    } else {
+      redirect("/dashboard");
+    }
+  }, []);
+
+  return null;
 }
