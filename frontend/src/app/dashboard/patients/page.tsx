@@ -150,13 +150,16 @@ const Patients: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Erro ao carregar pacientes");
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
       setPatients(data);
     } catch (error) {
-      console.error("Erro ao buscar pacientes:", error);
+      console.error("Erro detalhado ao buscar pacientes:", error);
+      if (error instanceof Error) {
+        console.error("Mensagem de erro:", error.message);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -164,6 +167,13 @@ const Patients: React.FC = () => {
 
   // Usar useEffect para carregar pacientes ao montar o componente
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+      console.warn("Token não encontrado!");
+      return;
+    }
+    
     fetchPatients();
   }, []);
 
@@ -202,7 +212,6 @@ const Patients: React.FC = () => {
         if (!response.ok) throw new Error("Erro ao criar paciente");
       }
 
-      // Recarregar lista de pacientes
       await fetchPatients();
       closeModal();
     } catch (error) {
