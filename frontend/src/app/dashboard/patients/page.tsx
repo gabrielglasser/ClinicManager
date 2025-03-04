@@ -85,7 +85,6 @@ const Patients: React.FC = () => {
     setIsLoading(true);
 
     try {
-
       const response = await fetch("http://localhost:4000/api/pacientes", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -111,12 +110,12 @@ const Patients: React.FC = () => {
   // Usar useEffect para carregar pacientes ao montar o componente
   useEffect(() => {
     const token = localStorage.getItem("token");
-    
+
     if (!token) {
       console.warn("Token não encontrado!");
       return;
     }
-    
+
     fetchPatients();
   }, []);
 
@@ -126,6 +125,25 @@ const Patients: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // Formatar a data para o formato dd/mm/yyyy
+      const formatDateForBackend = (dateString: string) => {
+        if (!dateString) return "";
+
+        // Se a data vier no formato yyyy-mm-dd
+        if (dateString.includes("-")) {
+          const [year, month, day] = dateString.split("-");
+          return `${day}/${month}/${year}`;
+        }
+        return dateString; // Se já estiver no formato correto
+      };
+
+      const formattedData = {
+        ...formData,
+        dataNascimento: formatDateForBackend(formData.dataNascimento),
+      };
+
+      console.log("Dados sendo enviados:", formattedData); // Debug
+
       if (currentPatient) {
         // Atualizar paciente existente
         const response = await fetch(
@@ -136,11 +154,15 @@ const Patients: React.FC = () => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(formattedData),
+            credentials: "include",
           }
         );
 
-        if (!response.ok) throw new Error("Erro ao atualizar paciente");
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Erro ao atualizar paciente");
+        }
       } else {
         // Criar novo paciente
         const response = await fetch("http://localhost:4000/api/pacientes", {
@@ -149,16 +171,27 @@ const Patients: React.FC = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(formattedData),
+          credentials: "include",
         });
 
-        if (!response.ok) throw new Error("Erro ao criar paciente");
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Erro ao criar paciente");
+        }
+
+        const data = await response.json();
+        console.log("Resposta do servidor:", data); // Debug
       }
 
       await fetchPatients();
       closeModal();
     } catch (error) {
-      console.error("Erro ao salvar paciente:", error);
+      console.error("Erro detalhado ao salvar paciente:", error);
+      if (error instanceof Error) {
+        console.error("Mensagem de erro:", error.message);
+        console.error("Data enviada:", formData.dataNascimento);
+      }
     } finally {
       setIsLoading(false);
     }

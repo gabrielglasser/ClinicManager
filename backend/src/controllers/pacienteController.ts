@@ -18,32 +18,76 @@ export const criarPacienteController = [
     const { nome, cpf, dataNascimento, telefone, endereco } = req.body;
     const photo = req.body.photo;
 
-    // Converter data do formato dd/mm/yyyy para Date
-    const formatarData = (dataString: string) => {
-      const [dia, mes, ano] = dataString.split("/");
-      return new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
-    };
+    console.log("Dados recebidos:", {
+      nome,
+      cpf,
+      dataNascimento,
+      telefone,
+      endereco,
+      photo,
+    }); // Debug
 
     try {
-      const dataNascimentoDate = formatarData(dataNascimento);
-      if (isNaN(dataNascimentoDate.getTime())) {
-        return res.status(400).json({
-          error: "Data de nascimento inválida. Use o formato dd/mm/yyyy",
-        });
-      }
+      // Converter data do formato dd/mm/yyyy para Date
+      const formatarData = (dataString: string) => {
+        try {
+          console.log("Data antes da formatação:", dataString); // Debug
 
-      const paciente = await criarPaciente({
+          if (!dataString) {
+            throw new Error("Data de nascimento é obrigatória");
+          }
+
+          const [dia, mes, ano] = dataString.split("/");
+          const data = new Date(
+            parseInt(ano),
+            parseInt(mes) - 1,
+            parseInt(dia)
+          );
+
+          console.log("Data após formatação:", data); // Debug
+
+          if (isNaN(data.getTime())) {
+            throw new Error("Data inválida após conversão");
+          }
+
+          return data;
+        } catch (error) {
+          console.error("Erro na formatação da data:", error);
+          throw error;
+        }
+      };
+
+      const dataNascimentoDate = formatarData(dataNascimento);
+
+      const dadosPaciente = {
         nome,
         cpf,
         dataNascimento: dataNascimentoDate,
         telefone,
         endereco,
-        photo,
-      });
+        photo: photo || "",
+      };
+
+      console.log("Dados para criação:", dadosPaciente); // Debug
+
+      const paciente = await criarPaciente(dadosPaciente);
+      console.log("Paciente criado:", paciente); // Debug
+
       res.status(201).json(paciente);
     } catch (error) {
-      console.error("Erro ao criar paciente:", error);
-      res.status(400).json({ error: "Erro ao criar paciente" });
+      console.error("Erro detalhado ao criar paciente:", error); // Debug
+      if (error instanceof Error) {
+        res.status(400).json({
+          error: "Erro ao criar paciente",
+          message: error.message,
+          details: error.stack,
+        });
+      } else {
+        res.status(500).json({
+          error: "Erro interno do servidor",
+          details: "Erro desconhecido ao criar paciente",
+        });
+      }
     }
   },
 ];
@@ -97,8 +141,6 @@ export const atualizarPacienteController = [
 
       // Tratar a data de nascimento
       if (dataNascimento) {
-        console.log("Data recebida:", dataNascimento); // Debug
-
         let dataNascimentoDate;
 
         if (typeof dataNascimento === "string") {

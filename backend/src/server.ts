@@ -11,25 +11,44 @@ import salaRoutes from "./routes/salaRoutes";
 import prontuarioRoutes from "./routes/prontuarioRoutes";
 import errorMiddleware from "./middlewares/errorMiddleware";
 import dotenv from "dotenv";
-import logger from './utils/logger';
+import logger from "./utils/logger";
 
 dotenv.config();
 
 const app = express();
 
-app.use(express.json());
-
+// Configuração do CORS antes de qualquer rota
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN, // Permite apenas requisições do frontend
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: "http://localhost:3000", // URL do frontend
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "Accept",
+    ],
+    exposedHeaders: ["Content-Range", "X-Content-Range"],
   })
 );
 
+app.use(express.json());
+
+// Middleware para logging
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.url}`);
+  // Adicionar headers CORS manualmente para garantir
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET,PUT,POST,DELETE,OPTIONS,PATCH"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+  );
   next();
 });
 
@@ -46,6 +65,9 @@ app.use("/api", prontuarioRoutes); // Rotas de prontuario
 
 // Middleware de erro
 app.use(errorMiddleware);
+
+// Tratamento especial para OPTIONS
+app.options("*", cors());
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
