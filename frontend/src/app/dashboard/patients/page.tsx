@@ -38,65 +38,7 @@ interface PatientFormData {
 }
 
 const Patients: React.FC = () => {
-  const mockPatients: Patient[] = [
-    {
-      id: "1",
-      nome: "Maria Oliveira",
-      cpf: "123.456.789-00",
-      dataNascimento: "1985-05-15",
-      telefone: "(11) 98765-4321",
-      endereco: "Rua das Flores, 123 - São Paulo, SP",
-      photo:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-      createdAt: "2023-01-15T10:30:00Z",
-    },
-    {
-      id: "2",
-      nome: "João Silva",
-      cpf: "987.654.321-00",
-      dataNascimento: "1978-08-22",
-      telefone: "(11) 91234-5678",
-      endereco: "Av. Paulista, 1000 - São Paulo, SP",
-      photo:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-      createdAt: "2023-02-20T14:15:00Z",
-    },
-    {
-      id: "3",
-      nome: "Ana Santos",
-      cpf: "456.789.123-00",
-      dataNascimento: "1990-12-10",
-      telefone: "(11) 99876-5432",
-      endereco: "Rua Augusta, 500 - São Paulo, SP",
-      photo:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-      createdAt: "2023-03-05T09:45:00Z",
-    },
-    {
-      id: "4",
-      nome: "Carlos Mendes",
-      cpf: "789.123.456-00",
-      dataNascimento: "1982-04-30",
-      telefone: "(11) 95555-9999",
-      endereco: "Rua Oscar Freire, 200 - São Paulo, SP",
-      photo:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-      createdAt: "2023-04-12T16:20:00Z",
-    },
-    {
-      id: "5",
-      nome: "Fernanda Lima",
-      cpf: "321.654.987-00",
-      dataNascimento: "1995-07-18",
-      telefone: "(11) 94444-8888",
-      endereco: "Alameda Santos, 800 - São Paulo, SP",
-      photo:
-        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
-      createdAt: "2023-05-25T11:10:00Z",
-    },
-  ];
-
-  const [patients, setPatients] = useState<Patient[]>(mockPatients);
+  const [patients, setPatients] = useState<Patient[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -143,7 +85,6 @@ const Patients: React.FC = () => {
     setIsLoading(true);
 
     try {
-
       const response = await fetch("http://localhost:4000/api/pacientes", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -169,12 +110,12 @@ const Patients: React.FC = () => {
   // Usar useEffect para carregar pacientes ao montar o componente
   useEffect(() => {
     const token = localStorage.getItem("token");
-    
+
     if (!token) {
       console.warn("Token não encontrado!");
       return;
     }
-    
+
     fetchPatients();
   }, []);
 
@@ -184,39 +125,61 @@ const Patients: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // Formatar a data para o formato esperado pelo backend (mm/dd/yyyy)
+      const formatDateForBackend = (dateString: string) => {
+        const [year, month, day] = dateString.split("-");
+        return `${month}/${day}/${year}`;
+      };
+
+      // Criar uma cópia do formData com a data formatada
+      const formattedData = {
+        ...formData,
+        dataNascimento: formatDateForBackend(formData.dataNascimento),
+      };
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
       if (currentPatient) {
         // Atualizar paciente existente
         const response = await fetch(
           `http://localhost:4000/api/pacientes/${currentPatient.id}`,
           {
             method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(formData),
+            headers,
+            body: JSON.stringify(formattedData),
+            credentials: "include",
           }
         );
 
-        if (!response.ok) throw new Error("Erro ao atualizar paciente");
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Erro ao atualizar paciente");
+        }
       } else {
         // Criar novo paciente
         const response = await fetch("http://localhost:4000/api/pacientes", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
+          headers,
+          body: JSON.stringify(formattedData),
+          credentials: "include",
         });
 
-        if (!response.ok) throw new Error("Erro ao criar paciente");
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Erro ao criar paciente");
+        }
       }
 
       await fetchPatients();
       closeModal();
     } catch (error) {
-      console.error("Erro ao salvar paciente:", error);
+      console.error("Erro detalhado ao salvar paciente:", error);
+      if (error instanceof Error) {
+        console.error("Mensagem de erro:", error.message);
+      }
     } finally {
       setIsLoading(false);
     }

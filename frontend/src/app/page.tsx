@@ -1,18 +1,20 @@
 "use client";
 
 import { useEffect } from "react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      redirect("/auth/login");
+      router.push("/auth/login");
     } else {
-      redirect("/dashboard");
+      router.push("/dashboard");
     }
-  }, []);
+  }, [router]);
 
   return null;
 }

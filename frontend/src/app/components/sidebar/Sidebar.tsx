@@ -20,30 +20,31 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
+  const [usuario, setUsuario] = React.useState({
+    nome: "Usuário",
+    tipo: "Tipo",
+    photo: "",
+  });
 
-  // Buscar dados do usuário do localStorage
-  const usuario = JSON.parse(
-    localStorage.getItem("usuario") ??
-      '{"nome": "Usuário", "tipo": "Tipo", "photo": ""}'
-  );
+  React.useEffect(() => {
+    const usuarioData = localStorage.getItem("usuario");
+    if (usuarioData) {
+      setUsuario(JSON.parse(usuarioData));
+    }
+  }, []);
 
   const handleLogout = async () => {
     try {
-      // Limpar o token e os dados do usuário do localStorage
       localStorage.removeItem("token");
       localStorage.removeItem("usuario");
-
-      // Redirecionar para a página de login
       router.push("/auth/login");
     } catch (error) {
       console.error("Erro ao fazer logout:", error);
-      // Caso ocorra um erro, ainda assim limpe o token e redirecione
       localStorage.removeItem("token");
       localStorage.removeItem("usuario");
       router.push("/auth/login");
     }
   };
-
 
   const isActive = (path: string) => {
     return location.pathname === path;
