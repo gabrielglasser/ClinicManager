@@ -1,29 +1,52 @@
-import { PrismaClient, Medico } from '@prisma/client';
-import { ICreateMedico, IUpdateMedico } from '../interfaces/IMedico';
+import { PrismaClient, Medico } from "@prisma/client";
+import { ICreateMedico, IUpdateMedico } from "../interfaces/IMedico";
 
 const prisma = new PrismaClient();
 
-// Criar um paciente
+// Criar um médico
 export const criarMedico = async (data: ICreateMedico): Promise<Medico> => {
-  return prisma.medico.create({ data });
+  return prisma.medico.create({
+    data,
+    include: {
+      especialidade: true,
+    },
+  });
 };
 
-// Buscar um paciente por ID
+// Buscar um médico por ID
 export const buscarMedicoPorId = async (id: string): Promise<Medico | null> => {
-  return prisma.medico.findUnique({ where: { id } });
+  return prisma.medico.findUnique({
+    where: { id },
+    include: {
+      especialidade: true,
+    },
+  });
 };
 
-// Listar todos os pacientes
+// Listar todos os médicos
 export const listarMedicos = async (): Promise<Medico[]> => {
-  return prisma.medico.findMany();
+  return prisma.medico.findMany({
+    include: {
+      especialidade: true,
+    },
+  });
 };
 
-// Atualizar um paciente
-export const atualizarMedico = async (id: string, data: IUpdateMedico): Promise<Medico> => {
-  return prisma.medico.update({ where: { id }, data });
+// Atualizar um médico
+export const atualizarMedico = async (
+  id: string,
+  data: IUpdateMedico
+): Promise<Medico> => {
+  return prisma.medico.update({
+    where: { id },
+    data,
+    include: {
+      especialidade: true,
+    },
+  });
 };
 
-// Deletar um paciente
+// Deletar um médico
 export const deletarMedico = async (id: string): Promise<void> => {
   await prisma.medico.delete({ where: { id } });
 };

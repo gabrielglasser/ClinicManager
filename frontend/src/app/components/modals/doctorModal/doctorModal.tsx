@@ -15,36 +15,17 @@ interface Doctor {
   id: string;
   nome: string;
   crm: string;
-  especialidade: string;
+  especialidade: Especialidade;
   telefone: string;
   email: string;
   photo: string;
   createdAt: string;
 }
 
-interface DoctorFormData {
-  nome: string;
-  crm: string;
-  especialidade: string;
-  telefone: string;
-  email: string;
-  photo: string;
-}
-
-interface FormErrors {
-  nome?: string;
-  crm?: string;
-  especialidade?: string;
-  telefone?: string;
-  email?: string;
-  photo?: string;
-  general?: string;
-}
-
 interface DoctorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: DoctorFormData) => Promise<void>;
+  onSave: (data: FormData) => Promise<void>;
   doctor: Doctor | null;
   isLoading: boolean;
 }
@@ -56,18 +37,26 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
   doctor,
   isLoading,
 }) => {
-  const [formData, setFormData] = useState<DoctorFormData>({
+  const [formData, setFormData] = useState({
     nome: "",
     crm: "",
-    especialidade: "",
+    especialidadeId: "",
     telefone: "",
     email: "",
-    photo: "",
   });
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<{
+    nome?: string;
+    crm?: string;
+    especialidade?: string;
+    telefone?: string;
+    email?: string;
+    photo?: string;
+    general?: string;
+  }>({});
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [especialidades, setEspecialidades] = useState<Especialidade[]>([]);
   const [loadingEspecialidades, setLoadingEspecialidades] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Função para buscar especialidades do backend
   const fetchEspecialidades = async () => {
@@ -101,7 +90,6 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
     }
   };
 
-  // Buscar especialidades quando o modal abrir
   useEffect(() => {
     if (isOpen) {
       fetchEspecialidades();
@@ -113,22 +101,21 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
       setFormData({
         nome: doctor.nome,
         crm: doctor.crm,
-        especialidade: doctor.especialidade,
+        especialidadeId: doctor.especialidade.id,
         telefone: doctor.telefone,
         email: doctor.email,
-        photo: doctor.photo,
       });
       setPreviewImage(doctor.photo);
     } else {
       setFormData({
         nome: "",
         crm: "",
-        especialidade: "",
+        especialidadeId: "",
         telefone: "",
         email: "",
-        photo: "",
       });
       setPreviewImage(null);
+      setSelectedFile(null);
     }
     setErrors({});
   }, [doctor, isOpen]);
@@ -139,17 +126,15 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear error when user types
-    if (errors[name as keyof FormErrors]) {
+    if (errors[name as keyof typeof errors]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.match("image.*")) {
       setErrors((prev) => ({
         ...prev,
@@ -158,7 +143,6 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
       return;
     }
 
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       setErrors((prev) => ({
         ...prev,
@@ -167,19 +151,18 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
       return;
     }
 
-    // Create preview
+    setSelectedFile(file);
+
     const reader = new FileReader();
     reader.onload = (event) => {
       setPreviewImage(event.target?.result as string);
     };
     reader.readAsDataURL(file);
-
-    setFormData((prev) => ({ ...prev, photo: file.name }));
     setErrors((prev) => ({ ...prev, photo: undefined }));
   };
 
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
+    const newErrors: typeof errors = {};
 
     if (!formData.nome) {
       newErrors.nome = "Nome é obrigatório";
@@ -191,7 +174,7 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
       newErrors.crm = "CRM inválido (5 ou 6 dígitos)";
     }
 
-    if (!formData.especialidade) {
+    if (!formData.especialidadeId) {
       newErrors.especialidade = "Especialidade é obrigatória";
     }
 
@@ -205,7 +188,7 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
       newErrors.email = "E-mail inválido";
     }
 
-    if (!doctor && !formData.photo && !previewImage) {
+    if (!doctor && !selectedFile && !previewImage) {
       newErrors.photo = "Foto é obrigatória";
     }
 
@@ -218,13 +201,27 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
 
     if (!validateForm()) return;
 
-    // Update the photo with the preview image
-    const updatedFormData = {
-      ...formData,
-      photo: previewImage || formData.photo,
-    };
+    const formDataToSend = new FormData();
+    formDataToSend.append("nome", formData.nome);
+    formDataToSend.append("crm", formData.crm);
+    formDataToSend.append("especialidadeId", formData.especialidadeId);
+    formDataToSend.append("telefone", formData.telefone);
+    formDataToSend.append("email", formData.email);
 
-    await onSave(updatedFormData);
+    if (selectedFile) {
+      formDataToSend.append("photo", selectedFile);
+    }
+
+    try {
+      await onSave(formDataToSend);
+      onClose();
+    } catch (error) {
+      console.error("Erro ao salvar médico:", error);
+      setErrors((prev) => ({
+        ...prev,
+        general: "Erro ao salvar médico. Por favor, tente novamente.",
+      }));
+    }
   };
 
   if (!isOpen) return null;
@@ -296,8 +293,8 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
               <div className={styles.selectContainer}>
                 <label className={styles.selectLabel}>Especialidade</label>
                 <select
-                  name="especialidade"
-                  value={formData.especialidade}
+                  name="especialidadeId"
+                  value={formData.especialidadeId}
                   onChange={handleChange}
                   className={styles.specialtySelect}
                   required
@@ -309,7 +306,7 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
                       : "Selecione uma especialidade"}
                   </option>
                   {especialidades.map((esp) => (
-                    <option key={esp.id} value={esp.nome}>
+                    <option key={esp.id} value={esp.id}>
                       {esp.nome}
                     </option>
                   ))}

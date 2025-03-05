@@ -181,9 +181,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </Link>
 
             <Link
-              href="/medicos"
+              href="/dashboard/doctors"
               className={`${styles.navLink} ${
-                isActive("/medicos") ? styles.active : ""
+                isActive("/dashboard/doctors") ? styles.active : ""
               }`}
               onClick={onClose}
             >

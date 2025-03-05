@@ -1,0 +1,233 @@
+.doctorsContainer {
+  padding: 1.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.searchBar {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  font-size: 0.875rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  transition: all 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: #3a8eff;
+    box-shadow: 0 0 0 3px rgba(58, 142, 255, 0.15);
+  }
+}
+
+.card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th {
+    background-color: #f9fafb;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    border-bottom: 2px solid #e5e7eb;
+  }
+
+  td {
+    padding: 1rem 1.5rem;
+    font-size: 0.875rem;
+    color: #1f2937;
+    border-bottom: 1px solid #e5e7eb;
+  }
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  svg {
+    color: #9ca3af;
+  }
+}
+
+.doctorName {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.doctorInfo {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.specialty {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: #f3f4f6;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.edit {
+    background-color: #eef2ff;
+    color: #4f46e5;
+
+    &:hover {
+      background-color: #e0e7ff;
+    }
+  }
+
+  &.delete {
+    background-color: #fef2f2;
+    color: #dc2626;
+
+    &:hover {
+      background-color: #fee2e2;
+    }
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.paginationInfo {
+  font-size: 0.875rem;
+  color: #6b7280;
+
+  strong {
+    color: #1f2937;
+  }
+}
+
+.paginationButtons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.paginationButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  background-color: white;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.active {
+    background-color: #3a8eff;
+    border-color: #3a8eff;
+    color: white;
+  }
+
+  &:not(:disabled):hover {
+    background-color: #f3f4f6;
+  }
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  svg {
+    color: #9ca3af;
+    margin-bottom: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0 0 2rem;
+    max-width: 24rem;
+  }
+}
