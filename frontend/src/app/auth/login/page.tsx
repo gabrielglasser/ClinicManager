@@ -80,8 +80,11 @@ export default function Login() {
         throw new Error(data.message || "Erro ao fazer login");
       }
 
-      // Salvar token no localStorage e cookie
+      // Salvar token e dados do usuário no localStorage
       localStorage.setItem("token", data.token);
+      localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+      // Salvar token no cookie
       document.cookie = `token=${data.token}; path=/`;
 
       router.push("/dashboard");

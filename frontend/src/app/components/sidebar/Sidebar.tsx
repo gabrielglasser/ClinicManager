@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
@@ -12,25 +12,71 @@ import {
   User,
 } from "lucide-react";
 import styles from "./Sidebar.module.scss";
+import UserModal from "../modals/userModal/userModal";
+import { useState } from "react";
+import { UserType } from "../../types/user";
 
 interface SidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
 }
 
+interface Usuario {
+  id: string;
+  nome: string;
+  email: string;
+  tipo: UserType;
+  photo: string;
+  createdAt: string;
+}
+
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const router = useRouter();
-  const [usuario, setUsuario] = React.useState({
-    nome: "Usuário",
-    tipo: "Tipo",
-    photo: "",
-  });
+  const pathname = usePathname();
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [usuario, setUsuario] = React.useState<Usuario | null>(null);
+
+  // Função para buscar dados atualizados do usuário
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("usuario");
+
+      if (!token || !storedUser) {
+        router.push("/auth/login");
+        return;
+      }
+
+      // Primeiro tenta pegar do localStorage
+      const parsedUser = JSON.parse(storedUser);
+      setUsuario(parsedUser);
+
+      // Depois busca dados atualizados da API
+      const response = await fetch(
+        `http://localhost:4000/api/usuarios/${parsedUser.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Falha ao buscar dados do usuário");
+      }
+
+      const userData = await response.json();
+      setUsuario(userData);
+
+      // Atualiza o localStorage com os dados mais recentes
+      localStorage.setItem("usuario", JSON.stringify(userData));
+    } catch (error) {
+      console.error("Erro ao buscar dados do usuário:", error);
+    }
+  };
 
   React.useEffect(() => {
-    const usuarioData = localStorage.getItem("usuario");
-    if (usuarioData) {
-      setUsuario(JSON.parse(usuarioData));
-    }
+    fetchUserData();
   }, []);
 
   const handleLogout = async () => {
@@ -46,120 +92,137 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  const handleEditProfile = () => {
+    setIsUserModalOpen(true);
+  };
+
+  const handleUpdateSuccess = () => {
+    fetchUserData(); // Busca dados atualizados após edição
+  };
+
   const isActive = (path: string) => {
-    return location.pathname === path;
+    return pathname === path;
   };
 
   return (
-    <div className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
-      <div className={styles.logo}>
-        <h2>ClinicManager</h2>
+    <>
+      <div className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
+        <div className={styles.logo}>
+          <h2>ClinicManager</h2>
+        </div>
+
+        <nav className={styles.nav}>
+          <div className={styles.navSection}>
+            <h3>Principal</h3>
+            <Link
+              href="/dashboard"
+              className={`${styles.navLink} ${
+                isActive("/dashboard") ? styles.active : ""
+              }`}
+              onClick={onClose}
+            >
+              <LayoutDashboard size={20} className={styles.icon} />
+              <span>Dashboard</span>
+            </Link>
+
+            <Link
+              href="/dashboard/patients"
+              className={`${styles.navLink} ${
+                isActive("/dashboard/patients") ? styles.active : ""
+              }`}
+              onClick={onClose}
+            >
+              <Users size={20} className={styles.icon} />
+              <span>Pacientes</span>
+            </Link>
+
+            <Link
+              href="/medicos"
+              className={`${styles.navLink} ${
+                isActive("/medicos") ? styles.active : ""
+              }`}
+              onClick={onClose}
+            >
+              <UserCog size={20} className={styles.icon} />
+              <span>Médicos</span>
+            </Link>
+
+            <Link
+              href="/consultas"
+              className={`${styles.navLink} ${
+                isActive("/consultas") ? styles.active : ""
+              }`}
+              onClick={onClose}
+            >
+              <CalendarClock size={20} className={styles.icon} />
+              <span>Consultas</span>
+            </Link>
+
+            <Link
+              href="/prontuarios"
+              className={`${styles.navLink} ${
+                isActive("/prontuarios") ? styles.active : ""
+              }`}
+              onClick={onClose}
+            >
+              <FileText size={20} className={styles.icon} />
+              <span>Prontuários</span>
+            </Link>
+          </div>
+
+          <div className={styles.navSection}>
+            <h3>Sistema</h3>
+            <Link
+              href="/usuarios"
+              className={`${styles.navLink} ${
+                isActive("/usuarios") ? styles.active : ""
+              }`}
+              onClick={onClose}
+            >
+              <Users size={20} className={styles.icon} />
+              <span>Usuários</span>
+            </Link>
+
+            <Link
+              href="/configuracoes"
+              className={`${styles.navLink} ${
+                isActive("/configuracoes") ? styles.active : ""
+              }`}
+              onClick={onClose}
+            >
+              <Settings size={20} className={styles.icon} />
+              <span>Configurações</span>
+            </Link>
+          </div>
+        </nav>
+
+        <div className={styles.userSection} onClick={handleEditProfile}>
+          <div className={styles.userAvatar}>
+            {usuario?.photo ? (
+              <img src={usuario.photo} alt={usuario.nome} />
+            ) : (
+              <User size={24} />
+            )}
+          </div>
+          <div className={styles.userInfo}>
+            <h4>{usuario?.nome || "Usuário"}</h4>
+            <p>{usuario?.tipo || "Tipo"}</p>
+          </div>
+        </div>
+
+        <button className={styles.logoutButton} onClick={handleLogout}>
+          <LogOut size={20} className={styles.icon} />
+          <span>Sair</span>
+        </button>
       </div>
 
-      <nav className={styles.nav}>
-        <div className={styles.navSection}>
-          <h3>Principal</h3>
-          <Link
-            href="/dashboard"
-            className={`${styles.navLink} ${
-              isActive("/dashboard") ? styles.active : ""
-            }`}
-            onClick={onClose}
-          >
-            <LayoutDashboard size={20} className={styles.icon} />
-            <span>Dashboard</span>
-          </Link>
-
-          <Link
-            href="/dashboard/patients"
-            className={`${styles.navLink} ${
-              isActive("/dashboard/patients") ? styles.active : ""
-            }`}
-            onClick={onClose}
-          >
-            <Users size={20} className={styles.icon} />
-            <span>Pacientes</span>
-          </Link>
-
-          <Link
-            href="/medicos"
-            className={`${styles.navLink} ${
-              isActive("/medicos") ? styles.active : ""
-            }`}
-            onClick={onClose}
-          >
-            <UserCog size={20} className={styles.icon} />
-            <span>Médicos</span>
-          </Link>
-
-          <Link
-            href="/consultas"
-            className={`${styles.navLink} ${
-              isActive("/consultas") ? styles.active : ""
-            }`}
-            onClick={onClose}
-          >
-            <CalendarClock size={20} className={styles.icon} />
-            <span>Consultas</span>
-          </Link>
-
-          <Link
-            href="/prontuarios"
-            className={`${styles.navLink} ${
-              isActive("/prontuarios") ? styles.active : ""
-            }`}
-            onClick={onClose}
-          >
-            <FileText size={20} className={styles.icon} />
-            <span>Prontuários</span>
-          </Link>
-        </div>
-
-        <div className={styles.navSection}>
-          <h3>Sistema</h3>
-          <Link
-            href="/usuarios"
-            className={`${styles.navLink} ${
-              isActive("/usuarios") ? styles.active : ""
-            }`}
-            onClick={onClose}
-          >
-            <Users size={20} className={styles.icon} />
-            <span>Usuários</span>
-          </Link>
-
-          <Link
-            href="/configuracoes"
-            className={`${styles.navLink} ${
-              isActive("/configuracoes") ? styles.active : ""
-            }`}
-            onClick={onClose}
-          >
-            <Settings size={20} className={styles.icon} />
-            <span>Configurações</span>
-          </Link>
-        </div>
-      </nav>
-
-      <div className={styles.userSection}>
-        <div className={styles.userAvatar}>
-          {usuario.photo ? (
-            <img src={usuario.photo} alt={usuario.nome} />
-          ) : (
-            <User size={24} />
-          )}
-        </div>
-        <div className={styles.userInfo}>
-          <h4>{usuario.nome}</h4>
-          <p>{usuario.tipo}</p>
-        </div>
-      </div>
-
-      <button className={styles.logoutButton} onClick={handleLogout}>
-        <LogOut size={20} className={styles.icon} />
-        <span>Sair</span>
-      </button>
-    </div>
+      <UserModal
+        isOpen={isUserModalOpen}
+        onClose={() => setIsUserModalOpen(false)}
+        user={usuario || undefined}
+        onSuccess={handleUpdateSuccess}
+      />
+    </>
   );
 };
 
