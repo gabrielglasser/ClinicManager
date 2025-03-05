@@ -36,13 +36,46 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [usuario, setUsuario] = React.useState<Usuario | null>(null);
 
+  // Função para verificar autenticação
+  const checkAuth = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/auth/login");
+      return false;
+    }
+
+    try {
+      const response = await fetch("http://localhost:4000/api/auth/verify", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        router.push("/auth/login");
+        return false;
+      }
+
+      return token;
+    } catch (error) {
+      console.error("Erro ao verificar autenticação:", error);
+      localStorage.removeItem("token");
+      localStorage.removeItem("usuario");
+      router.push("/auth/login");
+      return false;
+    }
+  };
+
   // Função para buscar dados atualizados do usuário
   const fetchUserData = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const storedUser = localStorage.getItem("usuario");
+      const token = await checkAuth();
+      if (!token) return;
 
-      if (!token || !storedUser) {
+      const storedUser = localStorage.getItem("usuario");
+      if (!storedUser) {
         router.push("/auth/login");
         return;
       }
@@ -62,6 +95,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       );
 
       if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("usuario");
+          router.push("/auth/login");
+          return;
+        }
         throw new Error("Falha ao buscar dados do usuário");
       }
 
@@ -72,6 +111,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       localStorage.setItem("usuario", JSON.stringify(userData));
     } catch (error) {
       console.error("Erro ao buscar dados do usuário:", error);
+      if (error instanceof Error && error.message.includes("401")) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        router.push("/auth/login");
+      }
     }
   };
 

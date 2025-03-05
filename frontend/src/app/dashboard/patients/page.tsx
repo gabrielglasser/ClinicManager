@@ -142,8 +142,6 @@ const Patients: React.FC = () => {
         dataNascimento: formatDateForBackend(formData.dataNascimento),
       };
 
-      console.log("Dados sendo enviados:", formattedData); // Debug
-
       if (currentPatient) {
         // Atualizar paciente existente
         const response = await fetch(
@@ -181,7 +179,6 @@ const Patients: React.FC = () => {
         }
 
         const data = await response.json();
-        console.log("Resposta do servidor:", data); // Debug
       }
 
       await fetchPatients();

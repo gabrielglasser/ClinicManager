@@ -22,18 +22,42 @@ const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Função para verificar autenticação
-  const checkAuth = () => {
+  const checkAuth = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/auth/login");
       return false;
     }
-    return token;
+
+    try {
+      // Verifica se o token é válido
+      const response = await fetch("http://localhost:4000/api/auth/verify", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        // Se o token for inválido, limpa o localStorage e redireciona
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+        router.push("/auth/login");
+        return false;
+      }
+
+      return token;
+    } catch (error) {
+      console.error("Erro ao verificar autenticação:", error);
+      localStorage.removeItem("token");
+      localStorage.removeItem("usuario");
+      router.push("/auth/login");
+      return false;
+    }
   };
 
   // Função para buscar pacientes
   const fetchPacientes = async () => {
-    const token = checkAuth();
+    const token = await checkAuth();
     if (!token) return;
 
     try {
@@ -47,6 +71,7 @@ const Dashboard: React.FC = () => {
       if (!response.ok) {
         if (response.status === 401) {
           localStorage.removeItem("token");
+          localStorage.removeItem("usuario");
           router.push("/auth/login");
           return;
         }

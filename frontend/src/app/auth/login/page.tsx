@@ -64,6 +64,7 @@ export default function Login() {
     if (!validateForm()) return;
 
     setIsLoading(true);
+    setErrors({});
 
     try {
       const response = await fetch("http://localhost:4000/api/auth/login", {
@@ -80,15 +81,35 @@ export default function Login() {
         throw new Error(data.message || "Erro ao fazer login");
       }
 
+      // Log para debug
+      console.log("Resposta do login:", data);
+
+      if (!data.token || !data.usuario) {
+        throw new Error("Resposta inválida do servidor");
+      }
+
       // Salvar token e dados do usuário no localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-      // Salvar token no cookie
-      document.cookie = `token=${data.token}; path=/`;
+      // Salvar token no cookie com path e httpOnly
+      document.cookie = `token=${data.token}; path=/; SameSite=Strict`;
 
-      router.push("/dashboard");
+      // Aguardar um momento para garantir que os dados foram salvos
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Verificar se os dados foram salvos
+      const savedToken = localStorage.getItem("token");
+      const savedUser = localStorage.getItem("usuario");
+
+      if (!savedToken || !savedUser) {
+        throw new Error("Falha ao salvar dados de autenticação");
+      }
+
+      // Redirecionar para o dashboard usando replace para evitar voltar ao login
+      router.replace("/dashboard");
     } catch (error) {
+      console.error("Erro no login:", error);
       setErrors({
         general: error instanceof Error ? error.message : "Erro ao fazer login",
       });
