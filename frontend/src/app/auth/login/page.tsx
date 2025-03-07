@@ -81,9 +81,6 @@ export default function Login() {
         throw new Error(data.message || "Erro ao fazer login");
       }
 
-      // Log para debug
-      console.log("Resposta do login:", data);
-
       if (!data.token || !data.usuario) {
         throw new Error("Resposta inválida do servidor");
       }

@@ -28,41 +28,23 @@ export const criarPacienteController = [
     }); // Debug
 
     try {
-      // Converter data do formato dd/mm/yyyy para Date
-      const formatarData = (dataString: string) => {
-        try {
-          console.log("Data antes da formatação:", dataString); // Debug
+      if (!dataNascimento) {
+        throw new Error("Data de nascimento é obrigatória");
+      }
 
-          if (!dataString) {
-            throw new Error("Data de nascimento é obrigatória");
-          }
+      // Converter a data para o formato correto
+      const data = new Date(dataNascimento);
+      if (isNaN(data.getTime())) {
+        throw new Error("Data de nascimento inválida");
+      }
 
-          const [dia, mes, ano] = dataString.split("/");
-          const data = new Date(
-            parseInt(ano),
-            parseInt(mes) - 1,
-            parseInt(dia)
-          );
-
-          console.log("Data após formatação:", data); // Debug
-
-          if (isNaN(data.getTime())) {
-            throw new Error("Data inválida após conversão");
-          }
-
-          return data;
-        } catch (error) {
-          console.error("Erro na formatação da data:", error);
-          throw error;
-        }
-      };
-
-      const dataNascimentoDate = formatarData(dataNascimento);
+      // Ajustar para o fuso horário local
+      const dataAjustada = new Date(data.getTime() + data.getTimezoneOffset() * 60000);
 
       const dadosPaciente = {
         nome,
         cpf,
-        dataNascimento: dataNascimentoDate,
+        dataNascimento: dataAjustada,
         telefone,
         endereco,
         photo: photo || "",

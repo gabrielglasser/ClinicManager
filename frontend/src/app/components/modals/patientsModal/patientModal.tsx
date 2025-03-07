@@ -231,25 +231,13 @@ const PatientModal: React.FC<PatientModalProps> = ({
     if (!validateForm()) return;
 
     try {
-      // Enviar apenas os campos que foram modificados durante a edição
+      // Se for edição, enviar todos os campos necessários
       if (patient) {
-        const changedFields = Object.entries(formData).reduce(
-          (acc, [key, value]) => {
-            if (value !== patient[key as keyof Patient]) {
-              acc[key as keyof PatientFormData] = value;
-            }
-            return acc;
-          },
-          {} as Partial<PatientFormData>
-        );
-
-        // Se não houver alterações, fechar o modal
-        if (Object.keys(changedFields).length === 0) {
-          onClose();
-          return;
-        }
-
-        await onSave(changedFields as PatientFormData);
+        const updatedFormData = {
+          ...formData,
+          photo: previewImage || formData.photo,
+        };
+        await onSave(updatedFormData);
       } else {
         // Se for criação, enviar todos os campos
         await onSave(formData);

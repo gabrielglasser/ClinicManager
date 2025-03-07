@@ -151,7 +151,6 @@ const Register: React.FC = () => {
 
       // Usar a interface User para tipar a resposta
       const newUser: User = data;
-      console.log('Usuário cadastrado:', newUser);
 
       // Redirecionar para o login após cadastro bem-sucedido
       router.push('/auth/login'); 

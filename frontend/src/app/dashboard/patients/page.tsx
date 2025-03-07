@@ -16,6 +16,7 @@ import Button from "../../components/button/Button";
 import PatientModal from "../../components/modals/patientsModal/patientModal";
 import DeleteConfirmationModal from "../../components/modals/deleteModal/deleteConfirmationModal";
 import styles from "./Patients.module.scss";
+import { useRouter } from "next/navigation";
 
 interface Patient {
   id: string;
@@ -44,6 +45,7 @@ const Patients: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentPatient, setCurrentPatient] = useState<Patient | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   // Filter patients
   const filteredPatients = patients.filter(
@@ -122,25 +124,45 @@ const Patients: React.FC = () => {
   // Atualizar função handleSavePatient
   const handleSavePatient = async (formData: PatientFormData) => {
     const token = localStorage.getItem("token");
+    
+    if (!token) {
+      console.error("Token não encontrado");
+      router.push("/auth/login");
+      return;
+    }
+
+    console.log("Token a ser enviado:", token); // Debug
+
     setIsLoading(true);
 
     try {
-      // Formatar a data para o formato dd/mm/yyyy
-      const formatDateForBackend = (dateString: string) => {
-        if (!dateString) return "";
+      // Criar FormData para enviar os dados incluindo a foto
+      const formDataToSend = new FormData();
+      formDataToSend.append("nome", formData.nome);
+      formDataToSend.append("cpf", formData.cpf);
+      
+      // Formatar a data corretamente
+      const dataNascimento = formData.dataNascimento;
+      console.log("Data original:", dataNascimento); // Debug
+      formDataToSend.append("dataNascimento", dataNascimento); // Enviar a data no formato yyyy-mm-dd
+      
+      formDataToSend.append("telefone", formData.telefone);
+      formDataToSend.append("endereco", formData.endereco);
 
-        // Se a data vier no formato yyyy-mm-dd
-        if (dateString.includes("-")) {
-          const [year, month, day] = dateString.split("-");
-          return `${day}/${month}/${year}`;
-        }
-        return dateString; // Se já estiver no formato correto
+      // Se houver uma foto em base64, convertê-la para Blob
+      if (formData.photo && formData.photo.startsWith('data:image')) {
+        const response = await fetch(formData.photo);
+        const blob = await response.blob();
+        formDataToSend.append("photo", blob, "photo.jpg");
+      }
+
+      console.log("Dados formatados:", Object.fromEntries(formDataToSend)); // Debug
+
+      const headers = {
+        "Authorization": `Bearer ${token}`
       };
 
-      const formattedData = {
-        ...formData,
-        dataNascimento: formatDateForBackend(formData.dataNascimento),
-      };
+      console.log("Headers da requisição:", headers); // Debug
 
       if (currentPatient) {
         // Atualizar paciente existente
@@ -148,12 +170,8 @@ const Patients: React.FC = () => {
           `http://localhost:4000/api/pacientes/${currentPatient.id}`,
           {
             method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(formattedData),
-            credentials: "include",
+            headers,
+            body: formDataToSend
           }
         );
 
@@ -163,22 +181,23 @@ const Patients: React.FC = () => {
         }
       } else {
         // Criar novo paciente
+        console.log("Enviando requisição para criar paciente..."); // Debug
         const response = await fetch("http://localhost:4000/api/pacientes", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formattedData),
-          credentials: "include",
+          headers,
+          body: formDataToSend
         });
+
+        console.log("Status da resposta:", response.status); // Debug
 
         if (!response.ok) {
           const errorData = await response.json();
+          console.error("Erro da API:", errorData); // Debug
           throw new Error(errorData.message || "Erro ao criar paciente");
         }
 
         const data = await response.json();
+        console.log("Resposta da API:", data); // Debug
       }
 
       await fetchPatients();
