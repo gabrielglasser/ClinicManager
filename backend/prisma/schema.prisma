@@ -62,6 +62,8 @@ model Medico {
   especialidade   Especialidade @relation(fields: [especialidadeId], references: [id])
   especialidadeId String
   telefone        String
+  email           String
+  photo           String
   consultas       Consulta[]
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt

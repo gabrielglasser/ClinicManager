@@ -131,8 +131,6 @@ const Patients: React.FC = () => {
       return;
     }
 
-    console.log("Token a ser enviado:", token); // Debug
-
     setIsLoading(true);
 
     try {
@@ -143,7 +141,6 @@ const Patients: React.FC = () => {
       
       // Formatar a data corretamente
       const dataNascimento = formData.dataNascimento;
-      console.log("Data original:", dataNascimento); // Debug
       formDataToSend.append("dataNascimento", dataNascimento); // Enviar a data no formato yyyy-mm-dd
       
       formDataToSend.append("telefone", formData.telefone);
@@ -156,13 +153,10 @@ const Patients: React.FC = () => {
         formDataToSend.append("photo", blob, "photo.jpg");
       }
 
-      console.log("Dados formatados:", Object.fromEntries(formDataToSend)); // Debug
 
       const headers = {
         "Authorization": `Bearer ${token}`
       };
-
-      console.log("Headers da requisição:", headers); // Debug
 
       if (currentPatient) {
         // Atualizar paciente existente
@@ -181,14 +175,11 @@ const Patients: React.FC = () => {
         }
       } else {
         // Criar novo paciente
-        console.log("Enviando requisição para criar paciente..."); // Debug
         const response = await fetch("http://localhost:4000/api/pacientes", {
           method: "POST",
           headers,
           body: formDataToSend
         });
-
-        console.log("Status da resposta:", response.status); // Debug
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -197,7 +188,6 @@ const Patients: React.FC = () => {
         }
 
         const data = await response.json();
-        console.log("Resposta da API:", data); // Debug
       }
 
       await fetchPatients();

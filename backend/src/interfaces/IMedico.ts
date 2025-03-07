@@ -4,6 +4,8 @@ export interface IMedico {
   crm: string;
   especialidadeId: string;
   telefone: string;
+  email: string;
+  photo?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -13,6 +15,8 @@ export interface ICreateMedico {
   crm: string;
   especialidadeId: string;
   telefone: string;
+  email: string;
+  photo?: string;
 }
 
 export interface IUpdateMedico {
@@ -20,4 +24,6 @@ export interface IUpdateMedico {
   crm?: string;
   especialidadeId?: string;
   telefone?: string;
+  email?: string;
+  photo?: string;
 }

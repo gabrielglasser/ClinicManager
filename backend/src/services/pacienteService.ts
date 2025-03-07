@@ -8,8 +8,6 @@ export const criarPaciente = async (
   data: ICreatePaciente
 ): Promise<Paciente> => {
   try {
-    console.log("Dados recebidos no service:", data); // Debug
-
     const paciente = await prisma.paciente.create({
       data: {
         ...data,
@@ -17,7 +15,6 @@ export const criarPaciente = async (
       },
     });
 
-    console.log("Paciente criado no service:", paciente); // Debug
     return paciente;
   } catch (error) {
     console.error("Erro no service ao criar paciente:", error);

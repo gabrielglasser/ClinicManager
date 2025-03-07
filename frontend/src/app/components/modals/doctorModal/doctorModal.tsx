@@ -15,7 +15,7 @@ interface Doctor {
   id: string;
   nome: string;
   crm: string;
-  especialidade: string;
+  especialidade: Especialidade;
   telefone: string;
   email: string;
   photo: string;
@@ -113,7 +113,7 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
       setFormData({
         nome: doctor.nome,
         crm: doctor.crm,
-        especialidade: doctor.especialidade,
+        especialidade: doctor.especialidade.id,
         telefone: doctor.telefone,
         email: doctor.email,
         photo: doctor.photo,
@@ -133,19 +133,40 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
     setErrors({});
   }, [doctor, isOpen]);
 
+  // Adicionar função para formatar telefone
+  const formatPhone = (value: string) => {
+    // Remove todos os caracteres não numéricos
+    const numbers = value.replace(/\D/g, "");
+    // Limita a 11 dígitos
+    const phone = numbers.slice(0, 11);
+
+    // Verifica se é celular (11 dígitos) ou telefone fixo (10 dígitos)
+    if (phone.length <= 10) {
+      return phone.replace(/(\d{2})(\d{4})(\d{4})/g, "($1) $2-$3");
+    }
+    return phone.replace(/(\d{2})(\d{5})(\d{4})/g, "($1) $2-$3");
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    let formattedValue = value;
 
-    // Clear error when user types
+    // Aplicar formatação para o telefone
+    if (name === "telefone") {
+      formattedValue = formatPhone(value);
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: formattedValue }));
+    
+    // Limpar erro do campo quando ele for alterado
     if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -167,46 +188,56 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
       return;
     }
 
-    // Create preview
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setPreviewImage(event.target?.result as string);
-    };
-    reader.readAsDataURL(file);
+    try {
+      // Converter a imagem para Base64
+      const base64Image = await convertToBase64(file);
+      setPreviewImage(base64Image as string);
+      setFormData((prev) => ({ ...prev, photo: base64Image as string }));
+      setErrors((prev) => ({ ...prev, photo: undefined }));
+    } catch (error) {
+      setErrors((prev) => ({ ...prev, photo: "Erro ao processar a imagem" }));
+    }
+  };
 
-    setFormData((prev) => ({ ...prev, photo: file.name }));
-    setErrors((prev) => ({ ...prev, photo: undefined }));
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
   };
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    if (!formData.nome) {
+    if (!formData.nome?.trim()) {
       newErrors.nome = "Nome é obrigatório";
     }
 
-    if (!formData.crm) {
+    if (!formData.crm?.trim()) {
       newErrors.crm = "CRM é obrigatório";
-    } else if (!/^\d{5,6}$/.test(formData.crm)) {
-      newErrors.crm = "CRM inválido (5 ou 6 dígitos)";
+    } else if (!/^\d{5,6}$/.test(formData.crm.replace(/\D/g, ""))) {
+      newErrors.crm = "CRM deve conter 5 ou 6 dígitos";
     }
 
     if (!formData.especialidade) {
       newErrors.especialidade = "Especialidade é obrigatória";
     }
 
-    if (!formData.telefone) {
+    if (!formData.telefone?.trim()) {
       newErrors.telefone = "Telefone é obrigatório";
+    } else {
+      const numerosTelefone = formData.telefone.replace(/\D/g, "");
+      if (numerosTelefone.length < 10 || numerosTelefone.length > 11) {
+        newErrors.telefone = "Telefone deve ter 10 ou 11 dígitos";
+      }
     }
 
-    if (!formData.email) {
+    if (!formData.email?.trim()) {
       newErrors.email = "E-mail é obrigatório";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "E-mail inválido";
-    }
-
-    if (!doctor && !formData.photo && !previewImage) {
-      newErrors.photo = "Foto é obrigatória";
     }
 
     setErrors(newErrors);
@@ -309,7 +340,7 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
                       : "Selecione uma especialidade"}
                   </option>
                   {especialidades.map((esp) => (
-                    <option key={esp.id} value={esp.nome}>
+                    <option key={esp.id} value={esp.id}>
                       {esp.nome}
                     </option>
                   ))}

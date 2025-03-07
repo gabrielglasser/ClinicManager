@@ -18,15 +18,6 @@ export const criarPacienteController = [
     const { nome, cpf, dataNascimento, telefone, endereco } = req.body;
     const photo = req.body.photo;
 
-    console.log("Dados recebidos:", {
-      nome,
-      cpf,
-      dataNascimento,
-      telefone,
-      endereco,
-      photo,
-    }); // Debug
-
     try {
       if (!dataNascimento) {
         throw new Error("Data de nascimento é obrigatória");
@@ -50,10 +41,7 @@ export const criarPacienteController = [
         photo: photo || "",
       };
 
-      console.log("Dados para criação:", dadosPaciente); // Debug
-
       const paciente = await criarPaciente(dadosPaciente);
-      console.log("Paciente criado:", paciente); // Debug
 
       res.status(201).json(paciente);
     } catch (error) {
@@ -146,15 +134,12 @@ export const atualizarPacienteController = [
           }
 
           if (dataNascimentoDate && !isNaN(dataNascimentoDate.getTime())) {
-            console.log("Data convertida:", dataNascimentoDate); // Debug
             dadosAtualizacao.dataNascimento = dataNascimentoDate;
           } else {
             console.error("Data inválida após conversão");
           }
         }
       }
-
-      console.log("Dados para atualização:", dadosAtualizacao); // Debug
 
       const paciente = await atualizarPaciente(id, dadosAtualizacao);
       res.status(200).json(paciente);
