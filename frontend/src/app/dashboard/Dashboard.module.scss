@@ -156,14 +156,20 @@
   
   .chartContent {
     height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #9ca3af;
+    margin-top: 1rem;
+    
+    .loading, .noData {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 0.875rem;
+    }
   }
   
   .appointmentsSection {
-    grid-column: span 4;
+    grid-column: 9 / span 4;
     background: white;
     border-radius: 0.75rem;
     padding: 1.5rem;
@@ -264,5 +270,37 @@
     &.canceled {
       background: rgba(239, 68, 68, 0.1);
       color: #ef4444;
+    }
+  }
+
+  /* Remova o :global e use uma classe local para o wrapper */
+  .tooltipWrapper {
+    :global(.recharts-tooltip-wrapper) {
+      :global(.recharts-default-tooltip) {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 0.5rem;
+        padding: 0.75rem !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        
+        :global(.recharts-tooltip-label) {
+          color: #1f2937 !important;
+          font-weight: 600;
+          margin-bottom: 0.25rem;
+        }
+        
+        :global(.recharts-tooltip-item) {
+          color: #6b7280 !important;
+          
+          :global(.recharts-tooltip-item-name) {
+            color: #374151 !important;
+          }
+          
+          :global(.recharts-tooltip-item-value) {
+            color: #3b82f6 !important;
+            font-weight: 600;
+          }
+        }
+      }
     }
   }
