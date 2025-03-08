@@ -39,3 +39,18 @@ npx prisma migrate dev --name init
 npx prisma generate
 npm run dev
 ```
+
+### 🔹 **Configurar o Frontend**
+```sh
+cd frontend
+npm install
+npm run dev
+```
+
+
+## 📝 Licença
+Este projeto está sob a licença MIT. Sinta-se à vontade para contribuir! ✨
+
+---
+
+💡 **Desenvolvido por [Gabriel dos Santos Glasser Rodrigues](https://github.com/gabrielglasser)**
