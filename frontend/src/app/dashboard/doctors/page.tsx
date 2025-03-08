@@ -168,8 +168,6 @@ const Doctors: React.FC = () => {
         }
       }
 
-      console.log('Dados a serem enviados:', Object.fromEntries(formDataToSend)); // Debug
-
       const url = currentDoctor 
         ? `http://localhost:4000/api/medicos/${currentDoctor.id}`
         : "http://localhost:4000/api/medicos";

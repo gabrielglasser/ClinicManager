@@ -17,16 +17,6 @@ export const criarMedicoController = [
       const { nome, crm, especialidadeId, telefone, email } = req.body;
       const photo = req.body.photo || "";
 
-      // Log para debug
-      console.log('Dados recebidos:', {
-        nome,
-        crm,
-        especialidadeId,
-        telefone,
-        email,
-        photo: photo ? 'Foto presente' : 'Sem foto'
-      });
-
       if (!nome || !crm || !especialidadeId || !telefone || !email) {
         return res.status(400).json({
           error: 'Dados inválidos',
