@@ -5,6 +5,7 @@ import { X } from 'lucide-react';
 import Input from '../../input/Input';
 import Button from '../../button/Button';
 import styles from './AppointmentModal.module.scss';
+import { format } from 'date-fns';
 
 interface Doctor {
   id: string;
@@ -20,17 +21,19 @@ interface Patient {
   nome: string;
 }
 
+interface Room {
+  id: string;
+  numero: number;
+}
+
 interface Appointment {
   id: string;
   pacienteId: string;
   medicoId: string;
   data: string;
-  hora: string;
-  status: 'AGENDADA' | 'CONFIRMADA' | 'CANCELADA' | 'REALIZADA';
-  observacoes: string;
+  salaId: string;
   createdAt: string;
-  medico: Doctor;
-  paciente: Patient;
+  updatedAt: string;
 }
 
 interface AppointmentFormData {
@@ -38,7 +41,7 @@ interface AppointmentFormData {
   medicoId: string;
   data: string;
   hora: string;
-  observacoes: string;
+  salaId: string;
 }
 
 interface FormErrors {
@@ -46,6 +49,7 @@ interface FormErrors {
   medicoId?: string;
   data?: string;
   hora?: string;
+  salaId?: string;
   observacoes?: string;
   general?: string;
 }
@@ -70,23 +74,26 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
     medicoId: '',
     data: '',
     hora: '',
-    observacoes: ''
+    salaId: ''
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
 
   useEffect(() => {
     if (isOpen) {
       fetchDoctors();
       fetchPatients();
+      fetchRooms();
       if (appointment) {
+        const date = new Date(appointment.data);
         setFormData({
           pacienteId: appointment.pacienteId,
           medicoId: appointment.medicoId,
-          data: appointment.data,
-          hora: appointment.hora,
-          observacoes: appointment.observacoes || ''
+          data: format(date, 'yyyy-MM-dd'),
+          hora: format(date, 'HH:mm'),
+          salaId: appointment.salaId
         });
       }
     }
@@ -124,6 +131,22 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
     }
   };
 
+  const fetchRooms = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:4000/api/salas', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (!response.ok) throw new Error('Erro ao buscar salas');
+      const data = await response.json();
+      setRooms(data);
+    } catch (error) {
+      console.error('Erro ao buscar salas:', error);
+    }
+  };
+
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
@@ -133,6 +156,10 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
 
     if (!formData.medicoId) {
       newErrors.medicoId = 'Selecione um médico';
+    }
+
+    if (!formData.salaId) {
+      newErrors.salaId = 'Selecione uma sala';
     }
 
     if (!formData.data) {
@@ -185,7 +212,7 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
       medicoId: '',
       data: '',
       hora: '',
-      observacoes: ''
+      salaId: ''
     });
     setErrors({});
     onClose();
@@ -244,6 +271,23 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
               {errors.medicoId && <p className={styles.error}>{errors.medicoId}</p>}
             </div>
 
+            <div className={styles.selectContainer}>
+              <label className={styles.selectLabel}>Sala</label>
+              <select
+                className={styles.select}
+                value={formData.salaId}
+                onChange={(e) => setFormData({ ...formData, salaId: e.target.value })}
+              >
+                <option value="">Selecione uma sala</option>
+                {rooms.map((room) => (
+                  <option key={room.id} value={room.id}>
+                    Sala {room.numero}
+                  </option>
+                ))}
+              </select>
+              {errors.salaId && <p className={styles.error}>{errors.salaId}</p>}
+            </div>
+
             <div className={styles.formRow}>
               <Input
                 label="Data"
@@ -259,16 +303,6 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 value={formData.hora}
                 onChange={(e) => setFormData({ ...formData, hora: e.target.value })}
                 error={errors.hora}
-              />
-            </div>
-
-            <div className={styles.textareaContainer}>
-              <label className={styles.textareaLabel}>Observações</label>
-              <textarea
-                className={styles.textarea}
-                value={formData.observacoes}
-                onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
-                placeholder="Adicione observações importantes sobre a consulta..."
               />
             </div>
 

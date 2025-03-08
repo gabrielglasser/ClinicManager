@@ -1,0 +1,255 @@
+.appointmentsContainer {
+    width: 100%;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+  }
+  
+  .searchBar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .searchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .searchIcon {
+    color: #6b7280;
+    margin-right: 0.5rem;
+  }
+  
+  .card {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  
+  .tableContainer {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    th {
+      font-weight: 600;
+      color: #4b5563;
+      background-color: #f9fafb;
+      font-size: 0.875rem;
+    }
+    
+    tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover td {
+      background-color: #f9fafb;
+    }
+  }
+  
+  .dateTime {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    
+    .icon {
+      color: #6b7280;
+      margin-top: 0.125rem;
+    }
+    
+    .date {
+      font-weight: 500;
+      color: #1f2937;
+    }
+    
+    .time {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+  }
+  
+  .name {
+    font-weight: 500;
+    color: #1f2937;
+  }
+  
+  .specialty {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    
+    &.confirmed {
+      background-color: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+    }
+    
+    &.scheduled {
+      background-color: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+    
+    &.canceled {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+    
+    &.completed {
+      background-color: rgba(59, 130, 246, 0.1);
+      color: #3b82f6;
+    }
+  }
+  
+  .createdAt {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .actionButton {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+      background-color: #f3f4f6;
+      color: #1f2937;
+    }
+    
+    &.edit:hover {
+      color: #3a8eff;
+    }
+    
+    &.delete:hover {
+      color: #ef4444;
+    }
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .paginationInfo {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .paginationButtons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .paginationButton {
+    background: none;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #4b5563;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+    
+    &:hover:not(:disabled) {
+      background-color: #f9fafb;
+      border-color: #d1d5db;
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    &.active {
+      background-color: #3a8eff;
+      color: white;
+      border-color: #3a8eff;
+    }
+  }
+  
+  .emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    
+    svg {
+      color: #d1d5db;
+      margin-bottom: 1.5rem;
+    }
+    
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #4b5563;
+      margin-bottom: 0.5rem;
+    }
+    
+    p {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      max-width: 400px;
+    }
+  }
