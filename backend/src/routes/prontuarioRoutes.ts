@@ -1,20 +1,31 @@
-import express from 'express';
+import { Router } from 'express';
 import {
   criarProntuarioController,
   buscarProntuarioPorIdController,
   listarProntuariosController,
   atualizarProntuarioController,
-  deletarProntuarioController,
+  deletarProntuarioController
 } from '../controllers/prontuarioController';
-import authMiddleware from '../middlewares/authMiddleware';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
-const router = express.Router();
+const router = Router();
 
-// Rotas para prontuários (protegidas por autenticação)
-router.post('/prontuarios', authMiddleware, criarProntuarioController);
-router.get('/prontuarios', authMiddleware, listarProntuariosController);
-router.get('/prontuarios/:id', authMiddleware, buscarProntuarioPorIdController);
-router.put('/prontuarios/:id', authMiddleware, atualizarProntuarioController);
-router.delete('/prontuarios/:id', authMiddleware, deletarProntuarioController);
+// Todas as rotas de prontuário requerem autenticação
+router.use(authMiddleware);
+
+// Criar novo prontuário
+router.post('/prontuarios', criarProntuarioController);
+
+// Listar todos os prontuários
+router.get('/prontuarios', listarProntuariosController);
+
+// Buscar prontuário por ID
+router.get('/prontuarios/:id', buscarProntuarioPorIdController);
+
+// Atualizar prontuário
+router.put('/prontuarios/:id', atualizarProntuarioController);
+
+// Deletar prontuário
+router.delete('/prontuarios/:id', deletarProntuarioController);
 
 export default router;
