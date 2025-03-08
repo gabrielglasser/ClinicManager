@@ -127,7 +127,6 @@ const Appointments: React.FC = () => {
   const fetchAppointments = async () => {
     try {
       const token = localStorage.getItem('token');
-      console.log('Buscando consultas...');
       
       const response = await fetch('http://localhost:4000/api/consultas', {
         headers: {
@@ -140,7 +139,6 @@ const Appointments: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log('Consultas recebidas:', data);
       
       if (!Array.isArray(data)) {
         console.error('Resposta da API não é um array:', data);
@@ -219,8 +217,6 @@ const Appointments: React.FC = () => {
         salaId: formData.salaId,
         data: dateTime.toISOString()
       };
-
-      console.log('Enviando payload:', payload);
       
       const response = await fetch(url, {
         method: currentAppointment ? 'PUT' : 'POST',
@@ -232,7 +228,6 @@ const Appointments: React.FC = () => {
       });
 
       const responseData = await response.json();
-      console.log('Resposta da API:', responseData);
 
       if (!response.ok) {
         throw new Error(responseData.message || 'Erro ao salvar consulta');

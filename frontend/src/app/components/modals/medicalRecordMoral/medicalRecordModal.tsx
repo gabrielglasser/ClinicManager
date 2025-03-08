@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+import axios from 'axios';
 import Button from '../../button/Button';
 import styles from './MedicalRecordModal.module.scss';
-import axios from 'axios';
+
+const API_URL = 'http://localhost:4000/api';
 
 interface Patient {
   id: string;
@@ -37,8 +39,6 @@ interface MedicalRecordModalProps {
   isLoading: boolean;
 }
 
-const API_URL = 'http://localhost:4000/api';
-
 const MedicalRecordModal: React.FC<MedicalRecordModalProps> = ({
   isOpen,
   onClose,
@@ -51,14 +51,24 @@ const MedicalRecordModal: React.FC<MedicalRecordModalProps> = ({
     pacienteId: '',
     historico: '',
   });
+  const [modalError, setModalError] = useState<string | null>(null);
   
   const [errors, setErrors] = useState<FormErrors>({});
+
+  const getAuthHeader = () => {
+    const token = localStorage.getItem('token');
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+  };
 
   useEffect(() => {
     // Carregar lista de pacientes do backend
     const fetchPatients = async () => {
       try {
-        const response = await axios.get(`${API_URL}/pacientes`);
+        const response = await axios.get(`${API_URL}/pacientes`, getAuthHeader());
         setPatients(response.data);
       } catch (error) {
         console.error('Erro ao carregar pacientes:', error);
@@ -117,19 +127,11 @@ const MedicalRecordModal: React.FC<MedicalRecordModalProps> = ({
     if (!validateForm()) return;
     
     try {
-      if (medicalRecord) {
-        await axios.put(`${API_URL}/prontuarios/${medicalRecord.id}`, {
-          historico: formData.historico
-        });
-      } else {
-        await axios.post(`${API_URL}/prontuarios`, formData);
-      }
-      
+      setModalError(null);
       await onSave(formData);
-      onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao salvar prontuário:', error);
-
+      setModalError(error.response?.data?.message || 'Erro ao salvar prontuário. Tente novamente mais tarde.');
     }
   };
 
@@ -149,6 +151,12 @@ const MedicalRecordModal: React.FC<MedicalRecordModalProps> = ({
         
         <form onSubmit={handleSubmit}>
           <div className={styles.modalBody}>
+            {modalError && (
+              <div className={styles.error}>
+                {modalError}
+              </div>
+            )}
+            
             <div className={styles.patientSelect}>
               <label className={styles.selectLabel}>Paciente</label>
               <select
