@@ -216,16 +216,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
           <div className={styles.navSection}>
             <h3>Sistema</h3>
-            <Link
-              href="/usuarios"
-              className={`${styles.navLink} ${
-                isActive("/usuarios") ? styles.active : ""
-              }`}
-              onClick={onClose}
-            >
-              <Users size={20} className={styles.icon} />
-              <span>Usuários</span>
-            </Link>
+            {usuario?.tipo === 'ADMIN' && (
+              <Link
+                href="/dashboard/adminUsers"
+                className={`${styles.navLink} ${
+                  isActive("/dashboard/adminUsers") ? styles.active : ""
+                }`}
+                onClick={onClose}
+              >
+                <Users size={20} className={styles.icon} />
+                <span>Usuários</span>
+              </Link>
+            )}
 
             <Link
               href="/configuracoes"
