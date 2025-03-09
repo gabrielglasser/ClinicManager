@@ -15,7 +15,13 @@ export const buscarConsultaPorId = async (id: string): Promise<Consulta | null> 
 
 // Listar todos os pacientes
 export const listarConsultas = async (): Promise<Consulta[]> => {
-  return prisma.consulta.findMany();
+  return prisma.consulta.findMany({
+    include: {
+      paciente: true,
+      medico: true,
+      sala: true
+    }
+  });
 };
 
 // Atualizar um paciente

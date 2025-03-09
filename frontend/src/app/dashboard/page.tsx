@@ -9,6 +9,7 @@ import {
   FileText,
   TrendingUp,
   TrendingDown,
+  CheckCircle
 } from "lucide-react";
 import DashboardLayout from "./layout/DashboardLayout";
 import styles from "./Dashboard.module.scss";
@@ -594,14 +595,15 @@ const Dashboard: React.FC = () => {
                   <div className={styles.appointmentTime}>
                     {formatTime(consulta.data)}
                   </div>
-                <div className={styles.appointmentInfo}>
-                    <h4>{consulta.paciente?.nome || 'Paciente não encontrado'}</h4>
-                    <p>{consulta.medico?.nome || 'Médico não encontrado'}</p>
-                </div>
+                  <div className={styles.appointmentInfo}>
+                    <h4>{consulta.paciente?.nome || 'Carregando...'}</h4>
+                    <p>Dr. {consulta.medico?.nome || 'Carregando...'}</p>
+                  </div>
                   <div className={`${styles.appointmentStatus} ${styles.confirmed}`}>
-                    Confirmada
+                    <CheckCircle size={14} />
+                    <span>Confirmada</span>
+                  </div>
                 </div>
-              </div>
               ))
             )}
           </div>
