@@ -6,7 +6,7 @@ import Input from "../../input/Input";
 import Button from "../../button/Button";
 import { UserType } from "../../../types/user";
 import styles from "./userModal.module.scss";
-import Image from 'next/image';
+
 
 interface User {
   id: string;
@@ -212,7 +212,7 @@ const UserModal: React.FC<UserModalProps> = ({
             <div className={styles.photoUpload}>
               <div className={styles.photoPreview}>
                 {previewImage ? (
-                  <Image src={previewImage} alt="Preview" />
+                  <img src={previewImage} alt="Preview" />
                 ) : (
                   <UserCircle size={80} />
                 )}

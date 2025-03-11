@@ -20,7 +20,6 @@ import Button from '../../components/button/Button';
 import MedicalRecordModal from '../../components/modals/medicalRecordMoral/medicalRecordModal';
 import DeleteConfirmationModal from '../../components/modals/deleteModal/deleteConfirmationModal';
 import styles from './MedicalRecords.module.scss';
-import Image from 'next/image';
 
 const API_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`;
 
@@ -220,7 +219,7 @@ const MedicalRecords: React.FC = () => {
                           <div className={styles.patientInfo}>
                             <div className={styles.avatar}>
                               {record.paciente?.photo ? (
-                                <Image src={record.paciente.photo} alt={record.paciente.nome || 'Paciente'} />
+                                <img src={record.paciente.photo} alt={record.paciente.nome || 'Paciente'} />
                               ) : (
                                 <UserCircle size={40} />
                               )}

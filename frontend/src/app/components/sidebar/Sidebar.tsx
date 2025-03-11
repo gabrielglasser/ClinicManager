@@ -15,7 +15,7 @@ import styles from "./Sidebar.module.scss";
 import UserModal from "../modals/userModal/userModal";
 import { useState } from "react";
 import { UserType } from "../../types/user";
-import Image from 'next/image';
+
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -265,7 +265,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         <div className={styles.userSection} onClick={handleEditProfile}>
           <div className={styles.userAvatar}>
             {usuario?.photo ? (
-              <Image src={usuario.photo} alt={usuario.nome} />
+              <img src={usuario.photo} alt={usuario.nome} />
             ) : (
               <User size={24} />
             )}

@@ -8,7 +8,7 @@ import Input from '../../components/input/Input';
 import Button from '../../components/button/Button';
 import styles from './register.module.scss'; 
 import { UserType, User } from '../../types/user'; // Importando os tipos
-import Image from 'next/image';
+
 
 interface FormData {
   nome: string;
@@ -178,7 +178,7 @@ const Register: React.FC = () => {
           <div className={styles.photoUpload}>
             <div className={styles.photoPreview}>
               {previewImage ? (
-                <Image src={previewImage} alt="Preview" />
+                <img src={previewImage} alt="Preview" />
               ) : (
                 <UserCircle size={80} />
               )}

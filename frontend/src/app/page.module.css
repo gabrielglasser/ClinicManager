@@ -104,7 +104,7 @@ a.secondary {
   gap: 8px;
 }
 
-.footer Image {
+.footer img {
   flex-shrink: 0;
 }
 

@@ -17,7 +17,6 @@ import PatientModal from "../../components/modals/patientsModal/patientModal";
 import DeleteConfirmationModal from "../../components/modals/deleteModal/deleteConfirmationModal";
 import styles from "./Patients.module.scss";
 import { useRouter } from "next/navigation";
-import Image from 'next/image';
 
 interface Patient {
   id: string;
@@ -308,7 +307,7 @@ const Patients: React.FC = () => {
                           >
                             <div className={styles.avatar}>
                               {patient.photo ? (
-                                <Image src={patient.photo} alt={patient.nome} />
+                                <img src={patient.photo} alt={patient.nome} />
                               ) : (
                                 <UserCircle size={40} />
                               )}

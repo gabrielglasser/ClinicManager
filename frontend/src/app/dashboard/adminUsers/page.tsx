@@ -20,7 +20,6 @@ import UserModal from '../../components/modals/userModal/userModal';
 import DeleteConfirmationModal from '../../components/modals/deleteModal/deleteConfirmationModal';
 import { User, UserType } from '../../types/user';
 import styles from './AdminUsers.module.scss';
-import Image from 'next/image';
 
 const AdminUsers: React.FC = () => {
   const router = useRouter();
@@ -303,7 +302,7 @@ const AdminUsers: React.FC = () => {
                           <div className={styles.userInfo}>
                             <div className={styles.avatar}>
                               {user.photo ? (
-                                <Image src={user.photo} alt={user.nome} />
+                                <img src={user.photo} alt={user.nome} />
                               ) : (
                                 <UserCircle size={40} />
                               )}

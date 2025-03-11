@@ -17,7 +17,7 @@ import DoctorModal from '../../components/modals/doctorModal/doctorModal';
 import DeleteConfirmationModal from '../../components/modals/deleteModal/deleteConfirmationModal';
 import styles from './doctors.module.scss';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+
 
 interface Especialidade {
   id: string;
@@ -272,7 +272,7 @@ const Doctors: React.FC = () => {
                           <div style={{ display: 'flex', alignItems: 'center' }}>
                             <div className={styles.avatar}>
                               {doctor.photo ? (
-                                <Image src={doctor.photo} alt={doctor.nome} />
+                                <img src={doctor.photo} alt={doctor.nome} />
                               ) : (
                                 <UserCircle size={40} />
                               )}

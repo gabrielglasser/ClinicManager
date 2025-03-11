@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   staticPageGenerationTimeout: 300,
   // Permitir imagens de qualquer domínio
   images: {
-    domains: ["localhost"],
+    domains: ["localhost", "res.cloudinary.com"],
   },
 };
 

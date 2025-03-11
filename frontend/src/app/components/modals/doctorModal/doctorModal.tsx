@@ -5,7 +5,7 @@ import { X, Upload, UserCircle } from "lucide-react";
 import Input from "../../input/Input";
 import Button from "../../button/Button";
 import styles from "./doctorModal.module.scss";
-import Image from 'next/image';
+
 
 interface Especialidade {
   id: string;
@@ -282,7 +282,7 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
             <div className={styles.photoUpload}>
               <div className={styles.photoPreview}>
                 {previewImage ? (
-                  <Image src={previewImage} alt="Preview" />
+                  <img src={previewImage} alt="Preview" />
                 ) : (
                   <UserCircle size={80} />
                 )}
