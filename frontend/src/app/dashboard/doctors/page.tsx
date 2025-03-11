@@ -17,6 +17,7 @@ import DoctorModal from '../../components/modals/doctorModal/doctorModal';
 import DeleteConfirmationModal from '../../components/modals/deleteModal/deleteConfirmationModal';
 import styles from './doctors.module.scss';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface Especialidade {
   id: string;
@@ -70,7 +71,7 @@ const Doctors: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:4000/api/medicos", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/medicos`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -169,8 +170,8 @@ const Doctors: React.FC = () => {
       }
 
       const url = currentDoctor 
-        ? `http://localhost:4000/api/medicos/${currentDoctor.id}`
-        : "http://localhost:4000/api/medicos";
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/medicos/${currentDoctor.id}`
+        : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/medicos`;
 
       const method = currentDoctor ? "PUT" : "POST";
 
@@ -208,7 +209,7 @@ const Doctors: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/medicos/${currentDoctor.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/medicos/${currentDoctor.id}`,
         {
           method: "DELETE",
           headers: {
@@ -271,7 +272,7 @@ const Doctors: React.FC = () => {
                           <div style={{ display: 'flex', alignItems: 'center' }}>
                             <div className={styles.avatar}>
                               {doctor.photo ? (
-                                <img src={doctor.photo} alt={doctor.nome} />
+                                <Image src={doctor.photo} alt={doctor.nome} />
                               ) : (
                                 <UserCircle size={40} />
                               )}

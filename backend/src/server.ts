@@ -21,7 +21,7 @@ const app = express();
 // Configuração do CORS antes de qualquer rota
 app.use(
   cors({
-    origin: "http://localhost:3000", // URL do frontend
+    origin: "https://clinic-manager-psi.vercel.app", // URL do frontend
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: [
@@ -40,7 +40,7 @@ app.use(express.json());
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   // Adicionar headers CORS manualmente para garantir
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Origin", "https://clinic-manager-psi.vercel.app");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
     "Access-Control-Allow-Methods",
@@ -70,7 +70,7 @@ app.use(errorMiddleware);
 // Tratamento especial para OPTIONS
 app.options("*", cors());
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
 
 // Exporta como handler para Vercel
 export default (req: VercelRequest, res: VercelResponse) => {

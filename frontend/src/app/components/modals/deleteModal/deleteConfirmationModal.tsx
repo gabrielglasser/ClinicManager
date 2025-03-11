@@ -3,7 +3,7 @@
 import React from 'react';
 import { X, AlertTriangle } from 'lucide-react';
 import Button from '../../button/Button';
-import styles from './DeleteConfirmationModal.module.scss';
+import styles from './deleteConfirmationModal.module.scss';
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;

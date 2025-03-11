@@ -82,7 +82,7 @@ const Appointments: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const promises = ids.map(id =>
-        fetch(`http://localhost:4000/api/medicos/${id}`, {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/medicos/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -105,7 +105,7 @@ const Appointments: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const promises = ids.map(id =>
-        fetch(`http://localhost:4000/api/pacientes/${id}`, {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pacientes/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -128,7 +128,7 @@ const Appointments: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:4000/api/consultas', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/consultas`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -203,8 +203,8 @@ const Appointments: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const url = currentAppointment
-        ? `http://localhost:4000/api/consultas/${currentAppointment.id}`
-        : 'http://localhost:4000/api/consultas';
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/consultas/${currentAppointment.id}`
+        : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/consultas`;
       
       // Combina data e hora em um único campo DateTime
       const [year, month, day] = formData.data.split('-').map(Number);
@@ -252,7 +252,7 @@ const Appointments: React.FC = () => {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:4000/api/consultas/${currentAppointment.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/consultas/${currentAppointment.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

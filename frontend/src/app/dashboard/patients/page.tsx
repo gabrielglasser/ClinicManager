@@ -17,6 +17,7 @@ import PatientModal from "../../components/modals/patientsModal/patientModal";
 import DeleteConfirmationModal from "../../components/modals/deleteModal/deleteConfirmationModal";
 import styles from "./Patients.module.scss";
 import { useRouter } from "next/navigation";
+import Image from 'next/image';
 
 interface Patient {
   id: string;
@@ -87,7 +88,7 @@ const Patients: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:4000/api/pacientes", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pacientes`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -161,7 +162,7 @@ const Patients: React.FC = () => {
       if (currentPatient) {
         // Atualizar paciente existente
         const response = await fetch(
-          `http://localhost:4000/api/pacientes/${currentPatient.id}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pacientes/${currentPatient.id}`,
           {
             method: "PUT",
             headers,
@@ -175,7 +176,7 @@ const Patients: React.FC = () => {
         }
       } else {
         // Criar novo paciente
-        const response = await fetch("http://localhost:4000/api/pacientes", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pacientes`, {
           method: "POST",
           headers,
           body: formDataToSend
@@ -212,7 +213,7 @@ const Patients: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/pacientes/${currentPatient.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pacientes/${currentPatient.id}`,
         {
           method: "DELETE",
           headers: {
@@ -307,7 +308,7 @@ const Patients: React.FC = () => {
                           >
                             <div className={styles.avatar}>
                               {patient.photo ? (
-                                <img src={patient.photo} alt={patient.nome} />
+                                <Image src={patient.photo} alt={patient.nome} />
                               ) : (
                                 <UserCircle size={40} />
                               )}

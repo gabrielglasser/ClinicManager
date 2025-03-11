@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import axios from 'axios';
 import Button from '../../button/Button';
-import styles from './MedicalRecordModal.module.scss';
+import styles from './medicalRecordModal.module.scss';
 
-const API_URL = 'http://localhost:4000/api';
+const API_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`;
 
 interface Patient {
   id: string;

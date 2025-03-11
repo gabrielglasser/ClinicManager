@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './AdminSettings.module.scss';
+import styles from './adminSettings.module.scss';
 import { FiSearch, FiPlus, FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
 import DashboardLayout from '../layout/DashboardLayout';
@@ -73,8 +73,8 @@ export default function AdminSettings() {
       setIsLoading(true);
       const token = localStorage.getItem("token");
       const endpoint = activeTab === 'especialidades' 
-        ? 'http://localhost:4000/api/especialidades' 
-        : 'http://localhost:4000/api/salas';
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/especialidades`
+        : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/salas`;
       
       const response = await fetch(endpoint, {
         headers: {
@@ -105,8 +105,8 @@ export default function AdminSettings() {
     try {
       const token = localStorage.getItem("token");
       const baseEndpoint = activeTab === 'especialidades' 
-        ? 'http://localhost:4000/api/especialidades' 
-        : 'http://localhost:4000/api/salas';
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/especialidades`
+        : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/salas`;
       
       const endpoint = editingItem 
         ? `${baseEndpoint}/${editingItem.id}`
@@ -158,8 +158,8 @@ export default function AdminSettings() {
       setIsDeletingLoading(true);
       const token = localStorage.getItem("token");
       const endpoint = activeTab === 'especialidades' 
-        ? 'http://localhost:4000/api/especialidades' 
-        : 'http://localhost:4000/api/salas';
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/especialidades`
+        : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/salas`;
       
       const response = await fetch(`${endpoint}/${itemToDelete.id}`, { 
         method: 'DELETE',

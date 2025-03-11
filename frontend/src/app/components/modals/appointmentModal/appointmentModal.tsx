@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import Input from '../../input/Input';
 import Button from '../../button/Button';
-import styles from './AppointmentModal.module.scss';
+import styles from './appointmentModal.module.scss';
 import { format } from 'date-fns';
 
 interface Doctor {
@@ -102,7 +102,7 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
   const fetchDoctors = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:4000/api/medicos', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/medicos`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -118,7 +118,7 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
   const fetchPatients = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:4000/api/pacientes', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pacientes`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -134,7 +134,7 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
   const fetchRooms = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:4000/api/salas', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/salas`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

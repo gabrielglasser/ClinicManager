@@ -20,6 +20,7 @@ import UserModal from '../../components/modals/userModal/userModal';
 import DeleteConfirmationModal from '../../components/modals/deleteModal/deleteConfirmationModal';
 import { User, UserType } from '../../types/user';
 import styles from './AdminUsers.module.scss';
+import Image from 'next/image';
 
 const AdminUsers: React.FC = () => {
   const router = useRouter();
@@ -37,7 +38,7 @@ const AdminUsers: React.FC = () => {
     try {
       setIsLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:4000/api/usuarios", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/usuarios`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -130,8 +131,8 @@ const AdminUsers: React.FC = () => {
     try {
       const token = localStorage.getItem("token");
       const url = currentUser 
-        ? `http://localhost:4000/api/usuarios/${currentUser.id}`
-        : "http://localhost:4000/api/usuarios";
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/usuarios/${currentUser.id}`
+        : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/usuarios`;
 
       const method = currentUser ? "PUT" : "POST";
 
@@ -174,7 +175,7 @@ const AdminUsers: React.FC = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:4000/api/usuarios/${currentUser.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/usuarios/${currentUser.id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -302,7 +303,7 @@ const AdminUsers: React.FC = () => {
                           <div className={styles.userInfo}>
                             <div className={styles.avatar}>
                               {user.photo ? (
-                                <img src={user.photo} alt={user.nome} />
+                                <Image src={user.photo} alt={user.nome} />
                               ) : (
                                 <UserCircle size={40} />
                               )}

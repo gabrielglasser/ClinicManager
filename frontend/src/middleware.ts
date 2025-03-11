@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
   // Verificar validade do token
   if (tokenFromCookie && !request.nextUrl.pathname.startsWith("/auth/")) {
     try {
-      const response = await fetch("http://localhost:4000/api/auth/verify", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/verify`, {
         headers: {
           Authorization: `Bearer ${tokenFromCookie}`,
         },

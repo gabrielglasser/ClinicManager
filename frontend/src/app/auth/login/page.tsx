@@ -6,7 +6,7 @@ import { redirect, useRouter } from "next/navigation";
 import { Mail, Lock, LogIn } from "lucide-react";
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
-import styles from "./Login.module.scss";
+import styles from "./login.module.scss";
 
 interface FormData {
   email: string;
@@ -67,7 +67,7 @@ export default function Login() {
     setErrors({});
 
     try {
-      const response = await fetch("http://localhost:4000/api/auth/login", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

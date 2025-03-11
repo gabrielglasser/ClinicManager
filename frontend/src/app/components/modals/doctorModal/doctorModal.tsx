@@ -5,6 +5,7 @@ import { X, Upload, UserCircle } from "lucide-react";
 import Input from "../../input/Input";
 import Button from "../../button/Button";
 import styles from "./doctorModal.module.scss";
+import Image from 'next/image';
 
 interface Especialidade {
   id: string;
@@ -78,7 +79,7 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token não encontrado");
 
-      const response = await fetch("http://localhost:4000/api/especialidades", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/especialidades`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -281,7 +282,7 @@ const DoctorModal: React.FC<DoctorModalProps> = ({
             <div className={styles.photoUpload}>
               <div className={styles.photoPreview}>
                 {previewImage ? (
-                  <img src={previewImage} alt="Preview" />
+                  <Image src={previewImage} alt="Preview" />
                 ) : (
                   <UserCircle size={80} />
                 )}

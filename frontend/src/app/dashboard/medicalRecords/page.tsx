@@ -20,8 +20,9 @@ import Button from '../../components/button/Button';
 import MedicalRecordModal from '../../components/modals/medicalRecordMoral/medicalRecordModal';
 import DeleteConfirmationModal from '../../components/modals/deleteModal/deleteConfirmationModal';
 import styles from './MedicalRecords.module.scss';
+import Image from 'next/image';
 
-const API_URL = 'http://localhost:4000/api';
+const API_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`;
 
 interface MedicalRecord {
   id: string;
@@ -219,7 +220,7 @@ const MedicalRecords: React.FC = () => {
                           <div className={styles.patientInfo}>
                             <div className={styles.avatar}>
                               {record.paciente?.photo ? (
-                                <img src={record.paciente.photo} alt={record.paciente.nome || 'Paciente'} />
+                                <Image src={record.paciente.photo} alt={record.paciente.nome || 'Paciente'} />
                               ) : (
                                 <UserCircle size={40} />
                               )}

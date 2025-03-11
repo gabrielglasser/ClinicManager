@@ -15,6 +15,7 @@ import styles from "./Sidebar.module.scss";
 import UserModal from "../modals/userModal/userModal";
 import { useState } from "react";
 import { UserType } from "../../types/user";
+import Image from 'next/image';
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -45,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/api/auth/verify", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/verify`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -86,7 +87,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
       // Depois busca dados atualizados da API
       const response = await fetch(
-        `http://localhost:4000/api/usuarios/${parsedUser.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/usuarios/${parsedUser.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -127,7 +128,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        await fetch("http://localhost:4000/api/auth/logout", {
+        await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/logout`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -264,7 +265,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         <div className={styles.userSection} onClick={handleEditProfile}>
           <div className={styles.userAvatar}>
             {usuario?.photo ? (
-              <img src={usuario.photo} alt={usuario.nome} />
+              <Image src={usuario.photo} alt={usuario.nome} />
             ) : (
               <User size={24} />
             )}

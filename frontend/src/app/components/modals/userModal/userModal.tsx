@@ -5,7 +5,8 @@ import { X, Upload, UserCircle } from "lucide-react";
 import Input from "../../input/Input";
 import Button from "../../button/Button";
 import { UserType } from "../../../types/user";
-import styles from "./UserModal.module.scss";
+import styles from "./userModal.module.scss";
+import Image from 'next/image';
 
 interface User {
   id: string;
@@ -158,7 +159,7 @@ const UserModal: React.FC<UserModalProps> = ({
       }
 
       const response = await fetch(
-        `http://localhost:4000/api/usuarios/${user?.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/usuarios/${user?.id}`,
         {
           method: "PUT",
           headers: {
@@ -211,7 +212,7 @@ const UserModal: React.FC<UserModalProps> = ({
             <div className={styles.photoUpload}>
               <div className={styles.photoPreview}>
                 {previewImage ? (
-                  <img src={previewImage} alt="Preview" />
+                  <Image src={previewImage} alt="Preview" />
                 ) : (
                   <UserCircle size={80} />
                 )}

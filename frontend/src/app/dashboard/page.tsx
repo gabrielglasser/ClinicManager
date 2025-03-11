@@ -54,7 +54,7 @@ const Dashboard: React.FC = () => {
 
     try {
       // Verifica se o token é válido
-      const response = await fetch("http://localhost:4000/api/auth/verify", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/verify`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -97,7 +97,7 @@ const Dashboard: React.FC = () => {
     if (!token) return;
 
     try {
-      const response = await fetch("http://localhost:4000/api/pacientes", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pacientes`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -148,7 +148,7 @@ const Dashboard: React.FC = () => {
     if (!token) return;
 
     try {
-      const response = await fetch("http://localhost:4000/api/medicos", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/medicos`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -197,7 +197,7 @@ const Dashboard: React.FC = () => {
     if (!token) return;
 
     try {
-      const response = await fetch("http://localhost:4000/api/prontuarios", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/prontuarios`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -245,7 +245,7 @@ const Dashboard: React.FC = () => {
     if (!token) return;
 
     try {
-      const response = await fetch("http://localhost:4000/api/consultas", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/consultas`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -359,7 +359,7 @@ const Dashboard: React.FC = () => {
     if (!token) return;
 
     try {
-      const response = await fetch("http://localhost:4000/api/consultas", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/consultas`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

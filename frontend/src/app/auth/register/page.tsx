@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import { Mail, Lock, User as UserIcon, Upload, UserCircle } from 'lucide-react'; 
 import Input from '../../components/input/Input';
 import Button from '../../components/button/Button';
-import styles from './Register.module.scss'; 
+import styles from './register.module.scss'; 
 import { UserType, User } from '../../types/user'; // Importando os tipos
+import Image from 'next/image';
 
 interface FormData {
   nome: string;
@@ -138,7 +139,7 @@ const Register: React.FC = () => {
       }
 
       // Fazer a requisição POST para a API
-      const response = await fetch('http://localhost:4000/api/usuarios', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/usuarios`, {
         method: 'POST',
         body: formDataToSend,
       });
@@ -154,8 +155,6 @@ const Register: React.FC = () => {
 
       // Redirecionar para o login após cadastro bem-sucedido
       router.push('/auth/login'); 
-    } catch (error) {
-      setErrors({ general: error.message || 'Falha ao realizar o cadastro. Tente novamente.' });
     } finally {
       setIsLoading(false);
     }
@@ -179,7 +178,7 @@ const Register: React.FC = () => {
           <div className={styles.photoUpload}>
             <div className={styles.photoPreview}>
               {previewImage ? (
-                <img src={previewImage} alt="Preview" />
+                <Image src={previewImage} alt="Preview" />
               ) : (
                 <UserCircle size={80} />
               )}
