@@ -90,7 +90,7 @@ export default function Login() {
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
       // Salvar token no cookie com path e httpOnly
-      document.cookie = `token=${data.token}; path=/; SameSite=Strict`;
+      document.cookie = `token=${data.token}; path=/; SameSite=Strict; secure`;
 
       // Aguardar um momento para garantir que os dados foram salvos
       await new Promise((resolve) => setTimeout(resolve, 100));

@@ -62,6 +62,10 @@ export const deletarEspecialidadeController = async (req: Request, res: Response
     await deletarEspecialidade(id);
     res.status(204).send();
   } catch (error) {
-    res.status(400).json(error);
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: 'Erro ao excluir especialidade' });
+    }
   }
 };

@@ -125,13 +125,30 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
   const handleLogout = async () => {
     try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        await fetch("http://localhost:4000/api/auth/logout", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+      
+      // Limpar localStorage
       localStorage.removeItem("token");
       localStorage.removeItem("usuario");
+      
+      // Limpar cookie
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict; secure";
+      
       router.push("/auth/login");
     } catch (error) {
       console.error("Erro ao fazer logout:", error);
+      // Limpar dados mesmo em caso de erro
       localStorage.removeItem("token");
       localStorage.removeItem("usuario");
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict; secure";
       router.push("/auth/login");
     }
   };
@@ -229,16 +246,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               </Link>
             )}
 
-            <Link
-              href="/configuracoes"
-              className={`${styles.navLink} ${
-                isActive("/configuracoes") ? styles.active : ""
-              }`}
-              onClick={onClose}
-            >
-              <Settings size={20} className={styles.icon} />
-              <span>Configurações</span>
-            </Link>
+            {usuario?.tipo === 'ADMIN' && (
+              <Link
+                href="/dashboard/adminSettings"
+                className={`${styles.navLink} ${
+                  isActive("/dashboard/adminSettings") ? styles.active : ""
+                }`}
+                onClick={onClose}
+              >
+                <Settings size={20} className={styles.icon} />
+                <span>Configurações</span>
+              </Link>
+            )}
           </div>
         </nav>
 

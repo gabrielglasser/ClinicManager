@@ -48,6 +48,7 @@ const AdminUsers: React.FC = () => {
       }
 
       const data = await response.json();
+      console.log("Usuários carregados:", data);
       setUsers(data);
       setError(null);
     } catch (error: any) {
@@ -91,8 +92,8 @@ const AdminUsers: React.FC = () => {
   // Filtrar usuários
   const filteredUsers = users.filter((user) => {
     const matchesSearch = 
-      user.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+      user.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase());
 
     if (activeTab === 'all') return matchesSearch;
     if (activeTab === 'doctors') return matchesSearch && user.tipo === 'MEDICO';
@@ -221,6 +222,17 @@ const AdminUsers: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    console.log("Todos os usuários:", users);
+    console.log("Aba ativa:", activeTab);
+    console.log("Usuários filtrados:", filteredUsers);
+    console.log("Usuários por tipo:", {
+      admin: users.filter(u => u.tipo === 'ADMIN').length,
+      medico: users.filter(u => u.tipo === 'MEDICO').length,
+      funcionario: users.filter(u => u.tipo === 'FUNCIONARIO').length
+    });
+  }, [activeTab, filteredUsers.length, searchTerm, users]);
+
   return (
     <DashboardLayout title="Administração de Usuários">
       <div className={styles.adminUsersContainer}>
@@ -238,34 +250,34 @@ const AdminUsers: React.FC = () => {
         </div>
 
         <div className={styles.tabs}>
-          <Button
-            variant={activeTab === 'all' ? 'primary' : 'outline'}
+          <button
+            type="button"
             onClick={() => setActiveTab('all')}
             className={`${styles.tab} ${activeTab === 'all' ? styles.active : ''}`}
           >
             Todos
-          </Button>
-          <Button
-            variant={activeTab === 'doctors' ? 'primary' : 'outline'}
+          </button>
+          <button
+            type="button"
             onClick={() => setActiveTab('doctors')}
             className={`${styles.tab} ${activeTab === 'doctors' ? styles.active : ''}`}
           >
             Médicos
-          </Button>
-          <Button
-            variant={activeTab === 'staff' ? 'primary' : 'outline'}
+          </button>
+          <button
+            type="button"
             onClick={() => setActiveTab('staff')}
             className={`${styles.tab} ${activeTab === 'staff' ? styles.active : ''}`}
           >
             Funcionários
-          </Button>
-          <Button
-            variant={activeTab === 'admin' ? 'primary' : 'outline'}
+          </button>
+          <button
+            type="button"
             onClick={() => setActiveTab('admin')}
             className={`${styles.tab} ${activeTab === 'admin' ? styles.active : ''}`}
           >
             Administradores
-          </Button>
+          </button>
         </div>
         
         <div className={styles.searchBar}>

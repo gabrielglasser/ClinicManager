@@ -25,5 +25,22 @@ export const atualizarEspecialidade = async (id: string, data: IUpdateEspecialid
 
 // Deletar uma especialidade
 export const deletarEspecialidade = async (id: string): Promise<void> => {
+  // Verifica se existem médicos com consultas nesta especialidade
+  const medicosComConsultas = await prisma.medico.findMany({
+    where: {
+      especialidadeId: id,
+    },
+    include: {
+      consultas: true,
+    },
+  });
+
+  // Verifica se algum médico tem consultas
+  const temConsultas = medicosComConsultas.some(medico => medico.consultas.length > 0);
+
+  if (temConsultas) {
+    throw new Error('Não é possível excluir esta especialidade pois existem consultas vinculadas aos médicos desta especialidade. Por favor, remova ou cancele as consultas antes de excluir a especialidade.');
+  }
+
   await prisma.especialidade.delete({ where: { id } });
 };

@@ -2,39 +2,39 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  const token = request.cookies.get("token")?.value;
-
+  // Verificar token no cookie
+  const tokenFromCookie = request.cookies.get("token")?.value;
+  
   if (request.nextUrl.pathname === "/") {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  if (!token && !request.nextUrl.pathname.startsWith("/auth/")) {
+  // Se não houver token no cookie e não estiver na rota de autenticação, redirecionar para login
+  if (!tokenFromCookie && !request.nextUrl.pathname.startsWith("/auth/")) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  if (token && request.nextUrl.pathname.startsWith("/auth/login")) {
+  // Se houver token e tentar acessar login, redirecionar para dashboard
+  if (tokenFromCookie && request.nextUrl.pathname.startsWith("/auth/login")) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  if (token && !request.nextUrl.pathname.startsWith("/auth/")) {
+  // Verificar validade do token
+  if (tokenFromCookie && !request.nextUrl.pathname.startsWith("/auth/")) {
     try {
       const response = await fetch("http://localhost:4000/api/auth/verify", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${tokenFromCookie}`,
         },
       });
 
       if (!response.ok) {
-        const response = NextResponse.redirect(
-          new URL("/auth/login", request.url)
-        );
+        const response = NextResponse.redirect(new URL("/auth/login", request.url));
         response.cookies.delete("token");
         return response;
       }
     } catch (error) {
-      const response = NextResponse.redirect(
-        new URL("/auth/login", request.url)
-      );
+      const response = NextResponse.redirect(new URL("/auth/login", request.url));
       response.cookies.delete("token");
       return response;
     }

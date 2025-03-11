@@ -31,7 +31,7 @@ model Funcionario {
   id              String        @id @default(uuid())
   nome            String
   telefone        String
-  especialidade   Especialidade @relation(fields: [especialidadeId], references: [id])
+  especialidade   Especialidade @relation(fields: [especialidadeId], references: [id], onDelete: Cascade)
   especialidadeId String
   usuario         Usuario?      @relation(fields: [usuarioId], references: [id])
   usuarioId       String?       @unique // Relação um-para-um
@@ -59,7 +59,7 @@ model Medico {
   id              String        @id @default(uuid())
   nome            String
   crm             String        @unique
-  especialidade   Especialidade @relation(fields: [especialidadeId], references: [id])
+  especialidade   Especialidade @relation(fields: [especialidadeId], references: [id], onDelete: Cascade)
   especialidadeId String
   telefone        String
   email           String

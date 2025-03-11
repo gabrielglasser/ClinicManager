@@ -26,9 +26,19 @@
       font-size: 0.875rem;
       font-weight: 500;
       padding: 0.5rem 1rem;
+      transition: all 0.2s;
+      background: none;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
       
       &:hover {
-        opacity: 0.9;
+        background-color: #f3f4f6;
+      }
+
+      &.active {
+        background-color: #3a8eff;
+        color: white;
+        border-color: #3a8eff;
       }
     }
   }
@@ -49,6 +59,10 @@
     outline: none;
     padding: 0.5rem;
     font-size: 0.875rem;
+    
+    &::placeholder {
+      color: #9ca3af;
+    }
   }
   
   .searchIcon {
@@ -103,12 +117,15 @@
   .avatar {
     width: 40px;
     height: 40px;
+    min-width: 40px;
+    min-height: 40px;
     border-radius: 50%;
     background-color: #e5e7eb;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #6b7280;
+    overflow: hidden;
     
     img {
       width: 100%;
@@ -156,32 +173,32 @@
   .actions {
     display: flex;
     gap: 0.5rem;
-   
-    .actionButton {
-      background: none;
-      border: none;
-      width: 32px;
-      height: 32px;
-      border-radius: 0.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #6b7280;
-      cursor: pointer;
-      transition: all 0.2s;
-      
-      &:hover {
-        background-color: #f3f4f6;
-        color: #1f2937;
-      }
-      
-      &.edit:hover {
-        color: #3a8eff;
-      }
+  }
+  
+  .actionButton {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+      background-color: #f3f4f6;
+      color: #1f2937;
+    }
+    
+    &.edit:hover {
+      color: #3a8eff;
+    }
 
-      &.delete:hover {
-        color: #ef4444;
-      }
+    &.delete:hover {
+      color: #ef4444;
     }
   }
   
@@ -189,27 +206,51 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 1rem;
-    padding: 1rem 0;
-
-    .paginationInfo {
-      color: var(--text-secondary);
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .paginationInfo {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .paginationButtons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .paginationButton {
+    background: none;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #4b5563;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+    
+    &:hover:not(:disabled) {
+      background-color: #f9fafb;
+      border-color: #d1d5db;
     }
-
-    .paginationButtons {
-      display: flex;
-      gap: 0.5rem;
-
-      .paginationButton {
-        padding: 0.5rem;
-        min-width: auto;
-        height: auto;
-
-        &.active {
-          background-color: var(--primary);
-          color: white;
-        }
-      }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    &.active {
+      background-color: #3a8eff;
+      color: white;
+      border-color: #3a8eff;
     }
   }
   

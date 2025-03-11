@@ -16,7 +16,7 @@ export const buscarUsuarioPorId = async (id: string) => {
 
 // Buscar todos os usuários
 export const listarUsuarios = async () => {
-  return prisma.usuario.findMany();
+  return await prisma.usuario.findMany();
 };
 
 // Atualizar um usuário
