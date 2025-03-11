@@ -11,6 +11,7 @@ import salaRoutes from "./routes/salaRoutes";
 import prontuarioRoutes from "./routes/prontuarioRoutes";
 import errorMiddleware from "./middlewares/errorMiddleware";
 import dotenv from "dotenv";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 import logger from "./utils/logger";
 
 dotenv.config();
@@ -35,9 +36,9 @@ app.use(
 
 app.use(express.json());
 
-// Middleware para logging
+// Middleware para logar requisições
 app.use((req, res, next) => {
-  logger.info(`${req.method} ${req.url}`);
+  console.log(`${req.method} ${req.url}`);
   // Adicionar headers CORS manualmente para garantir
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header("Access-Control-Allow-Credentials", "true");
@@ -70,6 +71,8 @@ app.use(errorMiddleware);
 app.options("*", cors());
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+
+// Exporta como handler para Vercel
+export default (req: VercelRequest, res: VercelResponse) => {
+  return app(req, res);
+};

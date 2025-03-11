@@ -48,7 +48,6 @@ const AdminUsers: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log("Usuários carregados:", data);
       setUsers(data);
       setError(null);
     } catch (error: any) {
@@ -223,14 +222,6 @@ const AdminUsers: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("Todos os usuários:", users);
-    console.log("Aba ativa:", activeTab);
-    console.log("Usuários filtrados:", filteredUsers);
-    console.log("Usuários por tipo:", {
-      admin: users.filter(u => u.tipo === 'ADMIN').length,
-      medico: users.filter(u => u.tipo === 'MEDICO').length,
-      funcionario: users.filter(u => u.tipo === 'FUNCIONARIO').length
-    });
   }, [activeTab, filteredUsers.length, searchTerm, users]);
 
   return (
