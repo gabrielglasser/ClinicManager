@@ -3,6 +3,8 @@
 ## 📖 Sobre o Projeto
 O **ClinicManager** é um sistema completo para gerenciamento de clínicas hospitalares. Permite o cadastro e gerenciamento de pacientes, médicos, consultas, prontuários, usuários e salas de atendimento.
 
+🔗 **Acesse o site:** [ClinicManager](https://clinic-manager-psi.vercel.app/)
+
 ## 🛠 Tecnologias Utilizadas
 - **Backend:** Node.js, Express, Prisma ORM, PostgreSQL
 - **Frontend:** Em andamento
