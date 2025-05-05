@@ -166,25 +166,100 @@
 
   .calendarModal,
   .notificationsModal {
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    transform: translateY(0) scale(1) !important;
-    display: block !important;
-    z-index: 9999 !important;
+    position: absolute;
+    top: 110%;
+    right: 0;
+    background: #fff;
+    border: 1.5px solid #e0e7ef;
+    border-radius: 16px;
+    padding: 20px 18px 18px 18px;
+    box-shadow: 0 8px 32px rgba(30,64,175,0.10), 0 1.5px 4px rgba(30,64,175,0.08);
+    z-index: 2000;
+    min-width: 280px;
+    max-width: 95vw;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    display: block;
+    @media (max-width: 600px) {
+      left: 50%;
+      right: auto;
+      transform: translate(-50%, 10px) scale(1);
+      min-width: 90vw;
+      max-width: 98vw;
+      padding: 12px 6px 10px 6px;
+    }
+  }
+  .calendarModal.open, .notificationsModal.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  .notificationsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #1e40af;
+  }
+
+  .clearButton {
+    background: none;
+    border: none;
+    color: #3a8eff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    &:hover {
+      background: #e0e7ff;
+    }
   }
 
   .notificationsList {
-    list-style: none;
-    padding: 0;
-    margin: 0.5rem 0 0 0;
-    font-size: 0.95rem;
-    li {
-      padding: 0.3rem 0;
-      border-bottom: 1px solid #f3f4f6;
-      &:last-child {
-        border-bottom: none;
-      }
+    max-height: 260px;
+    overflow-y: auto;
+    font-size: 0.97rem;
+  }
+
+  .notificationItem {
+    background: #f3f6fd;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: 1px solid transparent;
+    &:hover {
+      background: #e0e7ff;
+      border: 1px solid #3a8eff;
     }
+  }
+  .notificationItem.read {
+    opacity: 0.6;
+  }
+  .notificationTitle {
+    color: #1e40af;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .notificationMessage {
+    color: #334155;
+    font-size: 0.95rem;
+  }
+  .notificationTime {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+  .noNotifications {
+    color: #64748b;
+    text-align: center;
+    margin: 1rem 0 0.5rem 0;
   }
 
   .actionButton:focus {
