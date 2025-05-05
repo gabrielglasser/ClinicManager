@@ -8,6 +8,10 @@ import type { CalendarProps } from 'react-calendar';
 interface Notification {
   id: string;
   text: string;
+  read: boolean;
+  title: string;
+  message: string;
+  time: string;
 }
 
 interface HeaderProps {
@@ -21,6 +25,7 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick, notifications: noti
   const [showNotifications, setShowNotifications] = useState(false);
   const [date, setDate] = useState<CalendarProps['value']>(new Date());
   const [notifications, setNotifications] = useState<Notification[]>(notificationsProp || []);
+  const [searchTerm, setSearchTerm] = useState('');
   const calendarRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
 
@@ -71,6 +76,14 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick, notifications: noti
     }
   }, [showCalendar, showNotifications]);
 
+  const clearNotifications = () => {
+    setNotifications([]);
+  };
+
+  const markAsRead = (id: string) => {
+    setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
+  };
+
   return (
     <header className={styles.header}>
       <button className={styles.menuButton} onClick={onMenuClick}>
@@ -80,29 +93,26 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick, notifications: noti
       <h1 className={styles.pageTitle}>{title}</h1>
       
       <div className={styles.searchContainer}>
-        <Search size={18} className={styles.searchIcon} />
-        <input 
-          type="text" 
-          placeholder="Buscar..." 
-          className={styles.searchInput} 
-          aria-label="Buscar"
-          onInput={e => {
-            // Sanitização básica para evitar XSS
-            const input = e.target as HTMLInputElement;
-            input.value = input.value.replace(/<|>|&/g, '');
-          }}
-        />
+        <div className={styles.searchWrapper}>
+          <Search className={styles.searchIcon} />
+          <input
+            type="text"
+            placeholder="Pesquisar..."
+            className={styles.searchInput}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
       
       <div className={styles.actions}>
         <div className={styles.relativeWrapper}>
           <button
-            className={styles.actionButton}
-            aria-label="Abrir calendário"
-            onClick={() => setShowCalendar((v) => !v)}
-            tabIndex={0}
+            className={styles.iconButton}
+            onClick={() => setShowCalendar(!showCalendar)}
+            aria-label="Calendário"
           >
-            <CalendarIcon size={20} />
+            <CalendarIcon className={styles.icon} />
           </button>
           {showCalendar && (
             <div className={`${styles.calendarModal} open`} ref={calendarRef}>
@@ -110,6 +120,7 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick, notifications: noti
                 onChange={setDate}
                 value={date}
                 locale="pt-BR"
+                className={styles.calendar}
               />
             </div>
           )}
@@ -117,24 +128,54 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick, notifications: noti
         
         <div className={styles.relativeWrapper}>
           <button
-            className={styles.actionButton}
-            aria-label="Abrir notificações"
-            onClick={() => setShowNotifications((v) => !v)}
-            tabIndex={0}
+            className={styles.iconButton}
+            onClick={() => setShowNotifications(!showNotifications)}
+            aria-label="Notificações"
           >
-            <Bell size={20} />
-            <span className={styles.badge}>{notifications.length}</span>
+            <Bell className={styles.icon} />
+            {notifications.length > 0 && (
+              <span className={styles.notificationBadge}>{notifications.length}</span>
+            )}
           </button>
           {showNotifications && (
             <div className={`${styles.notificationsModal} open`} ref={notifRef}>
-              <strong>Notificações</strong>
-              <ul className={styles.notificationsList}>
+              <div className={styles.notificationsHeader}>
+                <h3>Notificações</h3>
+                <button
+                  className={styles.clearButton}
+                  onClick={clearNotifications}
+                  aria-label="Limpar notificações"
+                >
+                  Limpar todas
+                </button>
+              </div>
+              <div className={styles.notificationsList}>
                 {notifications.length === 0 ? (
-                  <li>Nenhuma notificação</li>
+                  <p className={styles.noNotifications}>Nenhuma notificação</p>
                 ) : (
-                  notifications.map(n => <li key={n.id}>{n.text}</li>)
+                  notifications.map((notification) => (
+                    <div
+                      key={notification.id}
+                      className={`${styles.notificationItem} ${
+                        notification.read ? styles.read : ''
+                      }`}
+                      onClick={() => markAsRead(notification.id)}
+                    >
+                      <div className={styles.notificationContent}>
+                        <p className={styles.notificationTitle}>
+                          {notification.title}
+                        </p>
+                        <p className={styles.notificationMessage}>
+                          {notification.message}
+                        </p>
+                        <span className={styles.notificationTime}>
+                          {notification.time}
+                        </span>
+                      </div>
+                    </div>
+                  ))
                 )}
-              </ul>
+              </div>
             </div>
           )}
         </div>
