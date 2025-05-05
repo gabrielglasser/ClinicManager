@@ -50,7 +50,11 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick, notifications: noti
           })
           .map((c: any) => ({
             id: c.id,
-            text: `Consulta de ${c.paciente?.nome || 'paciente'} às ${new Date(c.data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`
+            text: `Consulta de ${c.paciente?.nome || 'paciente'} às ${new Date(c.data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`,
+            title: 'Consulta próxima',
+            message: `Consulta de ${c.paciente?.nome || 'paciente'} às ${new Date(c.data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`,
+            time: new Date(c.data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+            read: false
           }));
         setNotifications(notifs);
       } catch (e) {
