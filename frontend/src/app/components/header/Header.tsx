@@ -88,6 +88,8 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick, notifications: noti
     setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
   };
 
+  console.log('showCalendar:', showCalendar, 'showNotifications:', showNotifications);
+
   return (
     <header className={styles.header}>
       <button className={styles.menuButton} onClick={onMenuClick}>
