@@ -6,9 +6,38 @@ O **ClinicManager** é um sistema completo para gerenciamento de clínicas hospi
 🔗 **Acesse o site:** [ClinicManager](https://clinic-manager-psi.vercel.app/)
 
 ## 🛠 Tecnologias Utilizadas
-- **Backend:** Node.js, Express, Prisma ORM, PostgreSQL
-- **Frontend:** Em andamento
-- **Autenticação:** JWT (JSON Web Token)
+### Backend
+- **Node.js**
+- **Express**
+- **TypeScript**
+- **Prisma ORM**
+- **PostgreSQL**
+- **JWT (JSON Web Token)**
+- **Multer** (upload de arquivos)
+- **Cloudinary** (armazenamento de imagens)
+- **Winston** (logs)
+- **Jest** (testes)
+- **dotenv** (variáveis de ambiente)
+- **CORS**
+- **bcryptjs** (hash de senhas)
+
+### Frontend
+- **Next.js**
+- **React**
+- **TypeScript**
+- **Tailwind CSS**
+- **Sass/SCSS**
+- **Vite** (ambiente de build)
+- **ESLint** (linting)
+- **React Hook Form** (formulários)
+- **Zod** (validação de schemas)
+- **Axios** (requisições HTTP)
+- **Date-fns** (manipulação de datas)
+- **React Toastify** e **React Hot Toast** (notificações)
+- **Lucide React** e **React Icons** (ícones)
+- **Recharts** (gráficos)
+
+Essas tecnologias garantem um sistema robusto, moderno e escalável, tanto no frontend quanto no backend.
 
 ## 📌 Funcionalidades
 ✅ Cadastro, edição, listagem e exclusão de **pacientes**
