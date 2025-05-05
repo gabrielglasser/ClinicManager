@@ -10,16 +10,30 @@
   flex-direction: column;
   box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
   z-index: 10;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  transform: translateX(0);
+  animation: sidebarFadeIn 0.4s;
 
+  @media (max-width: 1024px) {
+    width: 220px;
+  }
   @media (max-width: 768px) {
     transform: translateX(-100%);
-    width: 240px;
-
+    width: 180px;
     &.open {
       transform: translateX(0);
     }
   }
+  @media (max-width: 480px) {
+    width: 100vw;
+    min-width: 0;
+    max-width: 100vw;
+  }
+}
+
+@keyframes sidebarFadeIn {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .logo {
@@ -76,15 +90,24 @@
   display: flex;
   align-items: center;
   padding: 0.75rem 1.5rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #e0e7ff;
   text-decoration: none;
   transition: all 0.2s;
   position: relative;
+  border-radius: 0.5rem;
+  outline: none;
 
   &:hover,
   &.active {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: rgba(255, 255, 255, 0.13);
+    color: #fff;
+  }
+
+  &:focus {
+    outline: 2px solid #3a8eff;
+    outline-offset: 2px;
+    background: rgba(58, 142, 255, 0.13);
+    color: #fff;
   }
 
   &.active::before {
@@ -95,6 +118,7 @@
     height: 100%;
     width: 4px;
     background: #3a8eff;
+    border-radius: 2px;
   }
 }
 

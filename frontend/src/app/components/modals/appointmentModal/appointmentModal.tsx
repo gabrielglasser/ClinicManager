@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import Input from '../../input/Input';
 import Button from '../../button/Button';
@@ -80,6 +80,7 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [patients, setPatients] = useState<Patient[]>([]);
   const [rooms, setRooms] = useState<Room[]>([]);
+  const firstInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -98,6 +99,21 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
       }
     }
   }, [isOpen, appointment]);
+
+  useEffect(() => {
+    if (isOpen && firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [isOpen, onClose]);
 
   const fetchDoctors = async () => {
     try {
@@ -218,106 +234,110 @@ const AppointmentModal: React.FC<AppointmentModalProps> = ({
     onClose();
   };
 
+  if (!isOpen) return null;
   return (
-    isOpen ? (
-      <div className={styles.modal}>
-        <div className={styles.modalContent}>
-          <div className={styles.modalHeader}>
-            <h3 className={styles.modalTitle}>
-              {appointment ? 'Editar Consulta' : 'Nova Consulta'}
-            </h3>
-            <button className={styles.closeButton} onClick={handleClose}>
-              <X size={20} />
-            </button>
+    <div className={styles.modal} role="dialog" aria-modal="true" aria-label="Modal de consulta">
+      <div className={styles.modalContent}>
+        <div className={styles.modalHeader}>
+          <h3 className={styles.modalTitle} id="modalTitle">
+            {appointment ? "Editar Consulta" : "Nova Consulta"}
+          </h3>
+          <button
+            className={styles.closeButton}
+            onClick={onClose}
+            aria-label="Fechar modal"
+          >
+            <X size={20} />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} autoComplete="off" className={styles.modalBody}>
+          {errors.general && (
+            <div className={styles.errorMessage}>
+              {errors.general}
+            </div>
+          )}
+          <div className={styles.selectContainer}>
+            <label className={styles.selectLabel}>Paciente</label>
+            <select
+              className={styles.select}
+              value={formData.pacienteId}
+              onChange={(e) => setFormData({ ...formData, pacienteId: e.target.value })}
+            >
+              <option value="">Selecione um paciente</option>
+              {patients.map((patient) => (
+                <option key={patient.id} value={patient.id}>
+                  {patient.nome}
+                </option>
+              ))}
+            </select>
+            {errors.pacienteId && <p className={styles.error}>{errors.pacienteId}</p>}
           </div>
 
-          <form onSubmit={handleSubmit} className={styles.modalBody}>
-            {errors.general && (
-              <div className={styles.errorMessage}>
-                {errors.general}
-              </div>
-            )}
-            <div className={styles.selectContainer}>
-              <label className={styles.selectLabel}>Paciente</label>
-              <select
-                className={styles.select}
-                value={formData.pacienteId}
-                onChange={(e) => setFormData({ ...formData, pacienteId: e.target.value })}
-              >
-                <option value="">Selecione um paciente</option>
-                {patients.map((patient) => (
-                  <option key={patient.id} value={patient.id}>
-                    {patient.nome}
-                  </option>
-                ))}
-              </select>
-              {errors.pacienteId && <p className={styles.error}>{errors.pacienteId}</p>}
-            </div>
+          <div className={styles.selectContainer}>
+            <label className={styles.selectLabel}>Médico</label>
+            <select
+              className={styles.select}
+              value={formData.medicoId}
+              onChange={(e) => setFormData({ ...formData, medicoId: e.target.value })}
+            >
+              <option value="">Selecione um médico</option>
+              {doctors.map((doctor) => (
+                <option key={doctor.id} value={doctor.id}>
+                  {doctor.nome} - {doctor.especialidade.nome}
+                </option>
+              ))}
+            </select>
+            {errors.medicoId && <p className={styles.error}>{errors.medicoId}</p>}
+          </div>
 
-            <div className={styles.selectContainer}>
-              <label className={styles.selectLabel}>Médico</label>
-              <select
-                className={styles.select}
-                value={formData.medicoId}
-                onChange={(e) => setFormData({ ...formData, medicoId: e.target.value })}
-              >
-                <option value="">Selecione um médico</option>
-                {doctors.map((doctor) => (
-                  <option key={doctor.id} value={doctor.id}>
-                    {doctor.nome} - {doctor.especialidade.nome}
-                  </option>
-                ))}
-              </select>
-              {errors.medicoId && <p className={styles.error}>{errors.medicoId}</p>}
-            </div>
+          <div className={styles.selectContainer}>
+            <label className={styles.selectLabel}>Sala</label>
+            <select
+              className={styles.select}
+              value={formData.salaId}
+              onChange={(e) => setFormData({ ...formData, salaId: e.target.value })}
+            >
+              <option value="">Selecione uma sala</option>
+              {rooms.map((room) => (
+                <option key={room.id} value={room.id}>
+                  Sala {room.numero}
+                </option>
+              ))}
+            </select>
+            {errors.salaId && <p className={styles.error}>{errors.salaId}</p>}
+          </div>
 
-            <div className={styles.selectContainer}>
-              <label className={styles.selectLabel}>Sala</label>
-              <select
-                className={styles.select}
-                value={formData.salaId}
-                onChange={(e) => setFormData({ ...formData, salaId: e.target.value })}
-              >
-                <option value="">Selecione uma sala</option>
-                {rooms.map((room) => (
-                  <option key={room.id} value={room.id}>
-                    Sala {room.numero}
-                  </option>
-                ))}
-              </select>
-              {errors.salaId && <p className={styles.error}>{errors.salaId}</p>}
-            </div>
+          <div className={styles.formRow}>
+            <Input
+              label="Data"
+              type="date"
+              value={formData.data}
+              onChange={(e) => setFormData({ ...formData, data: e.target.value })}
+              error={errors.data}
+              ref={firstInputRef}
+              aria-label="Data da consulta"
+            />
 
-            <div className={styles.formRow}>
-              <Input
-                label="Data"
-                type="date"
-                value={formData.data}
-                onChange={(e) => setFormData({ ...formData, data: e.target.value })}
-                error={errors.data}
-              />
+            <Input
+              label="Hora"
+              type="time"
+              value={formData.hora}
+              onChange={(e) => setFormData({ ...formData, hora: e.target.value })}
+              error={errors.hora}
+            />
+          </div>
 
-              <Input
-                label="Hora"
-                type="time"
-                value={formData.hora}
-                onChange={(e) => setFormData({ ...formData, hora: e.target.value })}
-                error={errors.hora}
-              />
-            </div>
-
-            <div className={styles.modalFooter}>
-              <Button variant="outline" onClick={handleClose}>
-                Cancelar
-              </Button>
-              <Button type="submit" isLoading={isLoading}>
-                {appointment ? 'Salvar' : 'Agendar'}
-              </Button>
-            </div>
-          </form>
-        </div>
+          <div className={styles.modalFooter}>
+            <Button variant="outline" onClick={handleClose}>
+              Cancelar
+            </Button>
+            <Button type="submit" isLoading={isLoading}>
+              {appointment ? 'Salvar' : 'Agendar'}
+            </Button>
+          </div>
+        </form>
       </div>
-    ) : null
+    </div>
   );
 };
 

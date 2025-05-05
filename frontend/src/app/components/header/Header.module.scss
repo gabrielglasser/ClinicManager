@@ -12,8 +12,19 @@
     z-index: 5;
     transition: all 0.3s ease;
     
+    @media (max-width: 1024px) {
+      left: 80px;
+      padding: 0 0.5rem;
+    }
     @media (max-width: 768px) {
       left: 0;
+      padding: 0 0.5rem;
+    }
+    @media (max-width: 480px) {
+      flex-direction: column;
+      height: auto;
+      padding: 0.5rem 0.2rem;
+      align-items: flex-start;
     }
   }
   
@@ -40,6 +51,9 @@
     position: relative;
     margin-right: 1rem;
     
+    @media (max-width: 1024px) {
+      max-width: 200px;
+    }
     @media (max-width: 640px) {
       display: none;
     }
@@ -72,6 +86,16 @@
     display: flex;
     align-items: center;
     margin-left: auto;
+    gap: 0.5rem;
+    @media (max-width: 480px) {
+      margin-left: 0;
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+  
+  .relativeWrapper {
+    position: relative;
   }
   
   .actionButton {
@@ -92,14 +116,19 @@
       background-color: #f3f4f6;
       color: #1f2937;
     }
+    @media (max-width: 480px) {
+      margin-left: 0.2rem;
+      width: 32px;
+      height: 32px;
+    }
   }
   
   .badge {
     position: absolute;
     top: 0;
     right: 0;
-    background-color: #ef4444;
-    color: white;
+    background-color: #d90429;
+    color: #fff;
     font-size: 0.625rem;
     font-weight: 600;
     width: 18px;
@@ -109,6 +138,11 @@
     align-items: center;
     justify-content: center;
     border: 2px solid white;
+    @media (max-width: 480px) {
+      width: 14px;
+      height: 14px;
+      font-size: 0.5rem;
+    }
   }
   
   .pageTitle {
@@ -124,7 +158,7 @@
 
   .calendarModal {
     position: absolute;
-    top: 100%;
+    top: 110%;
     right: 0;
     background: white;
     border: 1px solid #ccc;
@@ -132,16 +166,59 @@
     padding: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
+    min-width: 260px;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    &.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
   }
 
   .notificationsModal {
     position: absolute;
-    top: 100%;
+    top: 110%;
     right: 0;
     background: white;
     border: 1px solid #ccc;
     border-radius: 4px;
-    padding: 10px;
+    padding: 10px 16px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
+    min-width: 220px;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    &.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+  }
+
+  .notificationsList {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0 0;
+    font-size: 0.95rem;
+    li {
+      padding: 0.3rem 0;
+      border-bottom: 1px solid #f3f4f6;
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .actionButton:focus {
+    outline: 2px solid #3a8eff;
+    outline-offset: 2px;
+  }
+
+  .actionButton:active {
+    background-color: #e0e7ff;
   }

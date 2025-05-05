@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from "react";
 import { X, AlertTriangle } from 'lucide-react';
 import Button from '../../button/Button';
 import styles from './deleteConfirmationModal.module.scss';
@@ -22,14 +22,35 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
   message,
   isLoading
 }) => {
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (isOpen && cancelButtonRef.current) {
+      cancelButtonRef.current.focus();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modal}>
+    <div className={styles.modal} role="dialog" aria-modal="true" aria-label="Modal de confirmação de exclusão">
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
-          <h3 className={styles.modalTitle}>Confirmar Exclusão</h3>
-          <button className={styles.closeButton} onClick={onClose}>
+          <h3 className={styles.modalTitle}>{title}</h3>
+          <button
+            className={styles.closeButton}
+            onClick={onClose}
+            aria-label="Fechar modal"
+          >
             <X size={20} />
           </button>
         </div>

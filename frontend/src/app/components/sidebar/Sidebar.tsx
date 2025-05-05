@@ -182,6 +182,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 isActive("/dashboard") ? styles.active : ""
               }`}
               onClick={onClose}
+              aria-label="Ir para Dashboard"
+              tabIndex={0}
             >
               <LayoutDashboard size={20} className={styles.icon} />
               <span>Dashboard</span>
@@ -193,6 +195,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 isActive("/dashboard/patients") ? styles.active : ""
               }`}
               onClick={onClose}
+              aria-label="Ir para Pacientes"
+              tabIndex={0}
             >
               <Users size={20} className={styles.icon} />
               <span>Pacientes</span>
@@ -276,7 +280,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        <button className={styles.logoutButton} onClick={handleLogout}>
+        <button
+          className={styles.logoutButton}
+          onClick={handleLogout}
+          aria-label="Sair do sistema"
+          tabIndex={0}
+        >
           <LogOut size={20} className={styles.icon} />
           <span>Sair</span>
         </button>

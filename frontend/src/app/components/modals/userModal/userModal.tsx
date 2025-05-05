@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { X, Upload, UserCircle } from "lucide-react";
 import Input from "../../input/Input";
 import Button from "../../button/Button";
@@ -54,6 +54,7 @@ const UserModal: React.FC<UserModalProps> = ({
   const [errors, setErrors] = useState<FormErrors>({});
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const firstInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (user) {
@@ -67,6 +68,21 @@ const UserModal: React.FC<UserModalProps> = ({
     }
     setErrors({});
   }, [user, isOpen]);
+
+  useEffect(() => {
+    if (isOpen && firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [isOpen, onClose]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -192,18 +208,22 @@ const UserModal: React.FC<UserModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modal}>
+    <div className={styles.modal} role="dialog" aria-modal="true" aria-label="Modal de usuário">
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
-          <h3 className={styles.modalTitle}>
+          <h3 className={styles.modalTitle} id="modalTitle">
             {user ? "Editar Usuário" : "Novo Usuário"}
           </h3>
-          <button className={styles.closeButton} onClick={onClose}>
+          <button
+            className={styles.closeButton}
+            onClick={onClose}
+            aria-label="Fechar modal"
+          >
             <X size={20} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           {errors.general && (
             <div className={styles.errorMessage}>{errors.general}</div>
           )}
@@ -236,12 +256,14 @@ const UserModal: React.FC<UserModalProps> = ({
             </div>
 
             <Input
-              label="Nome Completo"
+              label="Nome"
               name="nome"
               value={formData.nome}
               onChange={handleChange}
               error={errors.nome}
               required
+              ref={firstInputRef}
+              aria-label="Nome do usuário"
             />
 
             <Input

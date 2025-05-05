@@ -10,6 +10,12 @@
     justify-content: center;
     z-index: 50;
     padding: 1rem;
+    animation: modalFadeIn 0.3s;
+  }
+  
+  @keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
   
   .modalContent {
@@ -20,6 +26,12 @@
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: contentPopIn 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  
+  @keyframes contentPopIn {
+    from { opacity: 0; transform: scale(0.96) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
   }
   
   .modalHeader {
@@ -53,6 +65,11 @@
       background-color: #f3f4f6;
       color: #1f2937;
     }
+  }
+  
+  .closeButton:focus {
+    outline: 2px solid #3a8eff;
+    outline-offset: 2px;
   }
   
   .modalBody {
@@ -187,4 +204,11 @@
     color: #ef4444;
     font-size: 0.875rem;
     margin-top: 0.25rem;
+  }
+  
+  @media (max-width: 600px) {
+    .modalContent {
+      max-width: 98vw;
+      padding: 0.5rem;
+    }
   }
