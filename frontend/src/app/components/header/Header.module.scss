@@ -98,7 +98,7 @@
     position: relative;
   }
   
-  .actionButton {
+  .iconButton {
     background: none;
     border: none;
     width: 40px;
@@ -107,14 +107,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #4b5563;
+    color: inherit;
     cursor: pointer;
     position: relative;
     margin-left: 0.5rem;
-    
+    transition: background 0.2s, color 0.2s;
+
     &:hover {
       background-color: #f3f4f6;
-      color: #1f2937;
+      color: #2563eb;
     }
     @media (max-width: 480px) {
       margin-left: 0.2rem;
@@ -123,7 +124,14 @@
     }
   }
   
-  .badge {
+  .icon {
+    color: inherit !important;
+    width: 22px;
+    height: 22px;
+    transition: color 0.2s;
+  }
+  
+  .notificationBadge {
     position: absolute;
     top: 0;
     right: 0;
@@ -221,4 +229,31 @@
 
   .actionButton:active {
     background-color: #e0e7ff;
+  }
+
+  @media (max-width: 900px) {
+    .header {
+      flex-wrap: wrap;
+      height: auto;
+      padding: 0.5rem 0.5rem;
+    }
+    .actions {
+      margin-top: 0.5rem;
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      height: auto;
+      padding: 0.5rem 0.2rem;
+    }
+    .actions {
+      margin-top: 0.5rem;
+      width: 100%;
+      justify-content: flex-end;
+    }
   }
