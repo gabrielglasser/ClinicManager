@@ -3,6 +3,7 @@ import { Menu, Search, Bell, Calendar as CalendarIcon } from 'lucide-react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import styles from './Header.module.scss';
+import type { CalendarProps } from 'react-calendar';
 
 interface Notification {
   id: string;
@@ -18,7 +19,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ title, onMenuClick, notifications: notificationsProp }) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [date, setDate] = useState<Date | Date[]>(new Date());
+  const [date, setDate] = useState<CalendarProps['value']>(new Date());
   const [notifications, setNotifications] = useState<Notification[]>(notificationsProp || []);
   const calendarRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -105,7 +106,11 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick, notifications: noti
           </button>
           {showCalendar && (
             <div className={`${styles.calendarModal} open`} ref={calendarRef}>
-              <Calendar onChange={setDate} value={date} locale="pt-BR" />
+              <Calendar
+                onChange={setDate}
+                value={date}
+                locale="pt-BR"
+              />
             </div>
           )}
         </div>
