@@ -193,9 +193,11 @@
     }
   }
   .calendarModal.open, .notificationsModal.open {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translateY(0) scale(1) !important;
+    display: block !important;
+    z-index: 3000 !important;
   }
 
   .notificationsHeader {

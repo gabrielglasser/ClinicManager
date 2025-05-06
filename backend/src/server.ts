@@ -38,7 +38,6 @@ app.use(express.json());
 
 // Middleware para logar requisições
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
   // Adicionar headers CORS manualmente para garantir
   res.header("Access-Control-Allow-Origin", "https://clinic-manager-psi.vercel.app");
   res.header("Access-Control-Allow-Credentials", "true");
