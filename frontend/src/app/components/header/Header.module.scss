@@ -167,8 +167,9 @@
   .calendarModal,
   .notificationsModal {
     position: absolute;
-    top: 110%;
+    top: 120%;
     right: 0;
+    left: auto;
     background: #fff;
     border: 1.5px solid #e0e7ef;
     border-radius: 16px;
@@ -183,12 +184,12 @@
     transition: opacity 0.25s, transform 0.25s;
     display: block;
     @media (max-width: 600px) {
-      left: 50%;
-      right: auto;
-      transform: translate(-50%, 10px) scale(1);
+      right: 0 !important;
+      left: auto !important;
       min-width: 90vw;
       max-width: 98vw;
       padding: 12px 6px 10px 6px;
+      top: 120% !important;
     }
   }
   .calendarModal.open, .notificationsModal.open {

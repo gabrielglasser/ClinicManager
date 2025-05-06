@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick, notifications: noti
 
   // Buscar notificações reais de consultas próximas
   useEffect(() => {
-    if (notificationsProp) return; // Se vier por prop, não busca
+    if (notificationsProp) return; 
     const fetchNotifications = async () => {
       try {
         const token = localStorage.getItem('token');
